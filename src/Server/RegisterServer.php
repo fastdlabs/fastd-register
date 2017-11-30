@@ -19,7 +19,6 @@ class RegisterServer extends TCPServer
 {
     public function doClose(swoole_server $server, $fd, $fromId)
     {
-
     }
 
     /**

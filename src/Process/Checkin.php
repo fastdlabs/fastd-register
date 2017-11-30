@@ -10,8 +10,10 @@
 namespace Process;
 
 
+use FastD\Packet\Json;
 use FastD\Process\AbstractProcess;
 use Register\Node;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 use swoole_process;
 
 class Checkin extends AbstractProcess
@@ -30,11 +32,12 @@ class Checkin extends AbstractProcess
                     $available[] = $connection;
                 }
                 foreach ($nodes as $node) {
-                    if (!isset($node['fd']) || !in_array($node['fd'], $available)) {
+                    if ( ! isset($node['fd']) || ! in_array($node['fd'], $available)) {
                         cache()->deleteItem('node.'.$node['name']);
                     }
                 }
             }
+            server()->getSwoole()->send($connection, Json::encode(Node::collection()));
         });
     }
 }
