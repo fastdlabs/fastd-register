@@ -12,10 +12,18 @@ namespace Register;
 
 use FastD\Packet\Json;
 
+/**
+ * Class Node
+ * @package Register
+ */
 class Node
 {
     const NODE_KEY = 'nodes';
 
+    /**
+     * @return array
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     public static function collection()
     {
         $nodes = cache()->getItem(static::NODE_KEY);
@@ -32,6 +40,10 @@ class Node
         return $services;
     }
 
+    /**
+     * @param array $nodeInfo
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     public static function set(array $nodeInfo = [])
     {
         if (!isset($nodeInfo['name'])) {
@@ -52,10 +64,16 @@ class Node
         $node = cache()->getItem('node.' . $nodeInfo['name']);
         $node->set(Json::encode($nodeInfo));
 
+        static::map($nodeInfo['fd'], $nodeInfo['name']);
         cache()->save($nodes);
         cache()->save($node);
     }
 
+    /**
+     * @param $node
+     * @return array
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     public static function get($node)
     {
         $node = cache()->getItem('node.'.$node);
@@ -65,5 +83,32 @@ class Node
         }
 
         return Json::decode($node->get());
+    }
+
+    /**
+     * @param $fd
+     * @param $name
+     * @return bool|mixed
+     */
+    public static function map($fd, $name = null)
+    {
+        $node = cache()->getItem('node.'.$fd);
+
+        if (null === $name) {
+            return $node->get();
+        }
+        $node->set($name);
+        return cache()->save($node);
+    }
+
+    /**
+     * @param $name
+     */
+    public static function delete($name)
+    {
+        $node = cache()->getItem('node.'.$name);
+        if ($node->isHit()) {
+            cache()->deleteItems([$node]);
+        }
     }
 }

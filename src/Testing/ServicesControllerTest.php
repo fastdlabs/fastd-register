@@ -29,6 +29,18 @@ class ServicesControllerTest extends TestCase
             'error'     => 0,
             'time'      => time()
         ]);
+        $this->handleRequest($request, [
+            'name'   => 'testing2',
+            'pid'       => 0,
+            'sock'      => 'tcp',
+            'host'      => '127.0.0.1',
+            'port'      => '9877',
+            'stats'     => [
+                'connections' => 100
+            ],
+            'error'     => 0,
+            'time'      => time()
+        ]);
 //        echo $response;
     }
 

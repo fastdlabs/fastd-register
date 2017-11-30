@@ -24,6 +24,7 @@ class ServicesController
     /**
      * @param ServerRequest $request
      * @return Response
+     * @throws \FastD\Packet\Exceptions\PacketException
      */
     public function collections(ServerRequest $request)
     {
@@ -49,6 +50,7 @@ class ServicesController
     /**
      * @param ServerRequest $request
      * @return Response
+     * @throws \FastD\Packet\Exceptions\PacketException
      */
     public function node(ServerRequest $request)
     {

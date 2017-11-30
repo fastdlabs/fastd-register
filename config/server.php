@@ -20,11 +20,11 @@ return [
         'task_worker_num' => 20,
     ],
     'processes' => [
-
+        \Process\Checkin::class
     ],
     'listeners' => [
         [
-            'class' => \FastD\Servitization\Server\TCPServer::class,
+            'class' => \Server\RegisterServer::class,
             'host' => 'tcp://'.get_local_ip().':9528',
         ]
     ],

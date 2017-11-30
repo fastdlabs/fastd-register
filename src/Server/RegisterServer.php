@@ -10,23 +10,36 @@
 namespace Server;
 
 
+use FastD\Packet\Json;
 use FastD\Servitization\Server\TCPServer;
+use Register\Node;
 use swoole_server;
 
 class RegisterServer extends TCPServer
 {
-    public function doConnect(swoole_server $server, $fd, $from_id)
-    {
-
-    }
-
     public function doClose(swoole_server $server, $fd, $fromId)
     {
 
     }
 
-    public function doWork(swoole_server $server, $data, $taskId, $workerId)
+    /**
+     * @param swoole_server $server
+     * @param $fd
+     * @param $data
+     * @param $from_id
+     * @return mixed
+     */
+    public function doWork(swoole_server $server, $fd, $data, $from_id)
     {
-
+        try {
+            $node = Json::decode($data);
+            $node['fd'] = $fd;
+            Node::set($node);
+            $name = $node['name'];
+            Node::get($name);
+            $server->send($fd, "ok\r\n");
+        } catch (\Exception $exception) {
+            $server->send($fd, $exception->getTraceAsString());
+        }
     }
 }
