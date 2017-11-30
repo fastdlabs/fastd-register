@@ -9,7 +9,7 @@
 
 return [
     'host' => 'http://'.get_local_ip().':9527',
-    'class' => \Server\TaskServer::class,
+    'class' => \Server\RegisterServer::class,
     'options' => [
         'user' => 'nobody',
         'group' => 'nogroup',
