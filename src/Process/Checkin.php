@@ -25,13 +25,14 @@ class Checkin extends AbstractProcess
         timer_tick(1000, function () {
             $nodes = Node::collection();
             $available = [];
-            $connections = server()->getSwoole()->connection_list();
-            foreach ($connections as $connection) {
-                $available[] = $connection;
-            }
-            foreach ($nodes as $node) {
-                if (!isset($node['fd']) || !in_array($node['fd'], $available)) {
-                    cache()->deleteItem('node.'.$node['name']);
+            if (false !== $connections = server()->getSwoole()->connection_list()) {
+                foreach ($connections as $connection) {
+                    $available[] = $connection;
+                }
+                foreach ($nodes as $node) {
+                    if (!isset($node['fd']) || !in_array($node['fd'], $available)) {
+                        cache()->deleteItem('node.'.$node['name']);
+                    }
                 }
             }
         });

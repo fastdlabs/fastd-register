@@ -1,5 +1,5 @@
 <?php
 
-route()->get('/services', 'ServicesController@collections');
-route()->get('/services/{name}', 'ServicesController@query');
-route()->post('/services', 'ServicesController@node');
+route()->get('/', 'ServicesController@collections');
+route()->get('/{name}', 'ServicesController@query');
+route()->post('/', 'ServicesController@node');
