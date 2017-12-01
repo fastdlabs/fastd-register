@@ -93,33 +93,6 @@ class Node
     }
 
     /**
-     * @param $fd
-     * @param $name
-     * @return bool|mixed
-     */
-    public static function map($fd, $name = null)
-    {
-        $node = cache()->getItem('node.'.$fd);
-
-        if (null === $name) {
-            return $node->get();
-        }
-        $node->set($name);
-        return cache()->save($node);
-    }
-
-    /**
-     * @param $name
-     */
-    public static function delete($name)
-    {
-        $node = cache()->getItem('node.'.$name);
-        if ($node->isHit()) {
-            cache()->deleteItems([$node]);
-        }
-    }
-
-    /**
      * @param $node
      * @param array $info
      * @return $this
