@@ -8,11 +8,9 @@
  */
 
 return [
-    'host' => 'http://'.get_local_ip().':9527',
+    'host' => '0.0.0.0:8006',
     'class' => \FastD\Servitization\Server\HTTPServer::class,
     'options' => [
-        'user' => 'nobody',
-        'group' => 'nogroup',
         'pid_file' => __DIR__ . '/../runtime/pid/' . app()->getName() . '.pid',
         'log_file' => __DIR__ . '/../runtime/logs/' . app()->getName() . '.pid',
         'log_level' => 5,
@@ -24,8 +22,12 @@ return [
     ],
     'listeners' => [
         [
+            'class' => \Server\NotifyServer::class,
+            'host' => get_local_ip().':8007',
+        ],
+        [
             'class' => \Server\RegisterServer::class,
-            'host' => 'tcp://'.get_local_ip().':9528',
-        ]
+            'host' => get_local_ip().':8008',
+        ],
     ],
 ];
