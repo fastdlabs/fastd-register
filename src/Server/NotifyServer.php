@@ -13,7 +13,7 @@ namespace Server;
 use FastD\Servitization\Server\TCPServer;
 use swoole_server;
 
-class NodeServer extends TCPServer
+class NotifyServer extends TCPServer
 {
     public function doWork(swoole_server $server, $fd, $data, $from_id)
     {

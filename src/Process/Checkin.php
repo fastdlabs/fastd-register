@@ -13,7 +13,6 @@ namespace Process;
 use FastD\Packet\Json;
 use FastD\Process\AbstractProcess;
 use Register\Node;
-use SebastianBergmann\CodeCoverage\Report\PHP;
 use swoole_process;
 
 class Checkin extends AbstractProcess
@@ -36,8 +35,8 @@ class Checkin extends AbstractProcess
                         cache()->deleteItem('node.'.$node['name']);
                     }
                 }
+//                server()->getSwoole()->send($connection, Json::encode(Node::collection()));
             }
-            server()->getSwoole()->send($connection, Json::encode(Node::collection()));
         });
     }
 }

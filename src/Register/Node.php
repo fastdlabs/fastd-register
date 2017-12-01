@@ -111,4 +111,13 @@ class Node
             cache()->deleteItems([$node]);
         }
     }
+
+    public function add($node, array $info = [])
+    {}
+
+    public function reject($node, $host)
+    {}
+
+    public function remove($node)
+    {}
 }
