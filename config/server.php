@@ -18,11 +18,11 @@ return [
         'task_worker_num' => 20,
     ],
     'processes' => [
-        \Process\Checkin::class
+//        \Process\Checkin::class
     ],
     'listeners' => [
         [
-            'class' => \Server\NotifyServer::class,
+            'class' => \Server\SubscribeServer::class,
             'host' => get_local_ip().':8007',
         ],
         [

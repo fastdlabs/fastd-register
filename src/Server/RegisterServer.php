@@ -15,12 +15,12 @@ use FastD\Servitization\Server\TCPServer;
 use Register\Node;
 use swoole_server;
 
+/**
+ * Class RegisterServer
+ * @package Server
+ */
 class RegisterServer extends TCPServer
 {
-    public function doClose(swoole_server $server, $fd, $fromId)
-    {
-    }
-
     /**
      * @param swoole_server $server
      * @param $fd
@@ -32,10 +32,7 @@ class RegisterServer extends TCPServer
     {
         try {
             $node = Json::decode($data);
-            $node['fd'] = $fd;
-            Node::set($node);
-            $name = $node['name'];
-            Node::get($name);
+            node()->add($node['name'], $node);
             $server->send($fd, "ok\r\n");
         } catch (\Exception $exception) {
             $server->send($fd, $exception->getTraceAsString());
