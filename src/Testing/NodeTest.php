@@ -42,4 +42,9 @@ class NodeTest extends TestCase
     {
         node()->remove('service');
     }
+
+    public function testNodeCollection()
+    {
+
+    }
 }

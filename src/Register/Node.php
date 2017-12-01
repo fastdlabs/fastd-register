@@ -11,6 +11,7 @@ namespace Register;
 
 
 use FastD\Packet\Json;
+use InvalidArgumentException;
 
 /**
  * Class Node
@@ -19,7 +20,11 @@ use FastD\Packet\Json;
 class Node
 {
     const NODE_PREFIX = 'node.';
+    const NODES = 'nodes';
 
+    /**
+     * @var \Symfony\Component\Cache\Adapter\AbstractAdapter
+     */
     protected $store = null;
 
     public function __construct()
@@ -31,9 +36,9 @@ class Node
      * @return array
      * @throws \FastD\Packet\Exceptions\PacketException
      */
-    public static function collection()
+    public function collection()
     {
-        $nodes = cache()->getItem(static::NODE_KEY);
+        $nodes = cache()->getItem(static::NODES);
         $services = [];
         if (null !== $nodes = $nodes->get()) {
             $nodes = Json::decode($nodes);
@@ -48,35 +53,6 @@ class Node
     }
 
     /**
-     * @param array $nodeInfo
-     * @throws \FastD\Packet\Exceptions\PacketException
-     */
-    public static function set(array $nodeInfo = [])
-    {
-        if (!isset($nodeInfo['name'])) {
-            throw new \InvalidArgumentException('node name is undefined.');
-        }
-
-        $nodes = cache()->getItem(static::NODE_KEY);
-
-        if (null !== ($values = $nodes->get())) {
-            $values = Json::decode($values);
-            array_push($values, $nodeInfo['name']);
-            $values = array_unique($values);
-        } else {
-            $values = [$nodeInfo['name']];
-        }
-        $nodes->set(Json::encode($values));
-
-        $node = cache()->getItem('node.' . $nodeInfo['name']);
-        $node->set(Json::encode($nodeInfo));
-
-        static::map($nodeInfo['fd'], $nodeInfo['name']);
-        cache()->save($nodes);
-        cache()->save($node);
-    }
-
-    /**
      * @param $node
      * @return array
      * @throws \FastD\Packet\Exceptions\PacketException
@@ -86,7 +62,7 @@ class Node
         $node = $this->store->getItem(static::NODE_PREFIX.$node);
 
         if (!($node->isHit())) {
-            throw new \InvalidArgumentException(sprintf('Node %s is unregistered', $node->getKey()));
+            throw new InvalidArgumentException(sprintf('Node %s is unregistered', $node->getKey()));
         }
 
         return Json::decode($node->get());
