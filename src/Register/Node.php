@@ -41,9 +41,9 @@ class Node
         $nodes = cache()->getItem(static::NODES);
         $services = [];
         if (null !== $nodes = $nodes->get()) {
-            $nodes = Json::decode($nodes);
+            $nodes = Json::decode($nodes);;
             foreach ($nodes as $node) {
-                $node = cache()->getItem('node.'.$node)->get();
+                $node = cache()->getItem($node)->get();
                 if (null !== $node) {
                     $services[] = Json::decode($node);
                 }
@@ -91,6 +91,17 @@ class Node
             }
         }
         $node->set(Json::encode($nodeInfo));
+        $collection = $this->store->getItem(static::NODES);
+        if ($collection->isHit()) {
+            $collections = Json::decode($collection->get());
+            if (!in_array($node->getKey(), $collections)) {
+                array_push($collections, $node->getKey());
+            }
+            $collection->set(Json::encode($collections));
+        } else {
+            $collection->set(Json::encode([$node->getKey()]));
+        }
+        $this->store->save($collection);
         $this->store->save($node);
         return $this;
     }

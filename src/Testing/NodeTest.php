@@ -45,6 +45,6 @@ class NodeTest extends TestCase
 
     public function testNodeCollection()
     {
-
+        $collection = node()->collection();
     }
 }
