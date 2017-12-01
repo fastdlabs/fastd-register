@@ -10,17 +10,36 @@
 namespace Testing;
 
 use FastD\TestCase;
-use Register\Node;
 
 class NodeTest extends TestCase
 {
-    /**
-     * @throws \FastD\Packet\Exceptions\PacketException
-     */
     public function testNodeAdd()
     {
-        Node::set([
-            'name' => '',
-        ]);
+        $node = node()->add('demo')->get('demo');
+        $this->assertEmpty($node);
+    }
+
+    public function testNodeAddInfo()
+    {
+        $node = node()->add('service', [
+            'name' => 'demo',
+            'host' => '127.0.0.1',
+        ])->get('service');
+
+        $this->assertEquals([[
+            'name' => 'demo',
+            'host' => '127.0.0.1'
+        ]], $node);
+    }
+
+    public function testNodeReject()
+    {
+        $node = node()->reject('service', '127.0.0.1')->get('service');
+        $this->assertEmpty($node);
+    }
+
+    public function testNodeDelete()
+    {
+        node()->remove('service');
     }
 }

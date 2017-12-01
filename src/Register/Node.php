@@ -18,7 +18,14 @@ use FastD\Packet\Json;
  */
 class Node
 {
-    const NODE_KEY = 'nodes';
+    const NODE_PREFIX = 'node.';
+
+    protected $store = null;
+
+    public function __construct()
+    {
+        $this->store = cache();
+    }
 
     /**
      * @return array
@@ -74,9 +81,9 @@ class Node
      * @return array
      * @throws \FastD\Packet\Exceptions\PacketException
      */
-    public static function get($node)
+    public function get($node)
     {
-        $node = cache()->getItem('node.'.$node);
+        $node = $this->store->getItem(static::NODE_PREFIX.$node);
 
         if (!($node->isHit())) {
             throw new \InvalidArgumentException(sprintf('Node %s is unregistered', $node->getKey()));
@@ -112,12 +119,64 @@ class Node
         }
     }
 
+    /**
+     * @param $node
+     * @param array $info
+     * @return $this
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     public function add($node, array $info = [])
-    {}
+    {
+        $node = $this->store->getItem(static::NODE_PREFIX.$node);
+        $nodeInfo = [];
+        if ($node->isHit()) {
+            $nodeInfo = Json::decode($node->get());
+        }
+        if (!empty($info) || isset($info['host'])) {
+            $hosts = [];
+            if (isset($nodeInfo[0]['host'])) {
+                $hosts = array_column($nodeInfo, 'host');
+            }
+            if (empty($hosts) || !in_array($info['host'], $hosts)) {
+                array_push($nodeInfo, $info);
+            }
+        }
+        $node->set(Json::encode($nodeInfo));
+        $this->store->save($node);
+        return $this;
+    }
 
+    /**
+     * @param $node
+     * @param $host
+     * @return $this
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     public function reject($node, $host)
-    {}
+    {
+        $node = $this->store->getItem(static::NODE_PREFIX.$node);
+        if ($node->isHit()) {
+            $nodeInfo = Json::decode($node->get());
+            $hosts = array_column($nodeInfo, 'host');
+            $index = array_search($host, $hosts);
+            unset($nodeInfo[$index]);
+            $node->set(Json::encode($nodeInfo));
+            cache()->save($node);
+        }
+        return $this;
+    }
 
+    /**
+     * @param $node
+     * @return $this
+     */
     public function remove($node)
-    {}
+    {
+        $node = cache()->getItem(static::NODE_PREFIX.$node);
+        if ($node->isHit()) {
+            cache()->deleteItem(static::NODE_PREFIX.$node->getKey());
+        }
+
+        return $this;
+    }
 }
