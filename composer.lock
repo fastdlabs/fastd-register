@@ -502,16 +502,16 @@
         },
         {
             "name": "fastd/swoole",
-            "version": "v2.2.0-beta3",
+            "version": "v2.2.0-beta4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fastdlabs/swoole.git",
-                "reference": "b95df99edaece411a1408be7f9a4f2645391e8b7"
+                "reference": "08cf43180926e0cf094655da68d9938e03edd463"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/fastdlabs/swoole/b95df99edaece411a1408be7f9a4f2645391e8b7.zip",
-                "reference": "b95df99edaece411a1408be7f9a4f2645391e8b7",
+                "url": "https://files.phpcomposer.com/files/fastdlabs/swoole/08cf43180926e0cf094655da68d9938e03edd463.zip",
+                "reference": "08cf43180926e0cf094655da68d9938e03edd463",
                 "shasum": ""
             },
             "require": {
@@ -543,7 +543,7 @@
                 }
             ],
             "description": "FastD swoole.",
-            "time": "2017-11-30T04:33:27+00:00"
+            "time": "2017-11-30T10:17:00+00:00"
         },
         {
             "name": "fastd/testing",

@@ -10,17 +10,19 @@
 namespace Server;
 
 
-use FastD\Servitization\Server\TCPServer;
+use FastD\Servitization\Server\HTTPServer;
 use swoole_server;
 
 /**
  * Class SubscribeServer
  * @package Server
  */
-class SubscribeServer extends TCPServer
+class SubscribeServer extends HTTPServer
 {
-    public function doWork(swoole_server $server, $fd, $data, $from_id)
+    public function doTask(swoole_server $server, $data, $taskId, $workerId)
     {
-
+        foreach ($this->getSwoole()->connections as $connection) {
+            $info = $this->getSwoole()->connection_info($connection);
+        }
     }
 }

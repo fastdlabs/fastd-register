@@ -34,6 +34,7 @@ class RegisterServer extends TCPServer
             $node = Json::decode($data);
             node()->add($node['name'], $node);
             $server->send($fd, "ok\r\n");
+            $server->task('notify');
         } catch (\Exception $exception) {
             $server->send($fd, $exception->getTraceAsString());
         }

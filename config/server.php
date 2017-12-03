@@ -9,7 +9,7 @@
 
 return [
     'host' => '0.0.0.0:8006',
-    'class' => \FastD\Servitization\Server\HTTPServer::class,
+    'class' => \Server\SubscribeServer::class,
     'options' => [
         'pid_file' => __DIR__ . '/../runtime/pid/' . app()->getName() . '.pid',
         'log_file' => __DIR__ . '/../runtime/logs/' . app()->getName() . '.pid',
@@ -21,10 +21,6 @@ return [
 //        \Process\Checkin::class
     ],
     'listeners' => [
-        [
-            'class' => \Server\SubscribeServer::class,
-            'host' => get_local_ip().':8007',
-        ],
         [
             'class' => \Server\RegisterServer::class,
             'host' => get_local_ip().':8008',

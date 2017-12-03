@@ -27,7 +27,7 @@ class ServicesController
      */
     public function collections(ServerRequest $request)
     {
-        $services = Node::collection();
+        $services = node()->collection();
 
         return json($services);
     }
@@ -41,7 +41,7 @@ class ServicesController
     {
         $node = $request->getAttribute('name');
 
-        $node = Node::get($node);
+        $node = node()->get($node);
 
         return json($node);
     }
@@ -55,7 +55,7 @@ class ServicesController
     {
         $nodeInfo = $request->getParsedBody();
 
-        Node::set($nodeInfo);
+        node()->add($nodeInfo['name'], $nodeInfo);
 
         return json($nodeInfo, Response::HTTP_CREATED);
     }
