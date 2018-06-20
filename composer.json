@@ -1,9 +1,11 @@
 {
-    "name": "fastd/fastd-regster",
+    "name": "fastd/dobee",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "stable",
-    "keywords": ["FastD"],
+    "keywords": [
+        "FastD"
+    ],
     "authors": [
         {
             "name": "JanHuang",
@@ -12,13 +14,13 @@
     ],
     "require": {
         "php": ">=5.6",
-        "fastd/fastd": "^3.2@beta",
-        "fastd/migration": "^0.1@beta",
-        "fastd/swoole": "^2.2@beta",
-        "fastd/query-builder": "^2.0@beta"
+        "fastd/fastd": "^3.2",
+        "runner/validator": "^0.2.8"
     },
     "require-dev": {
-        "phpunit/dbunit": "^2.0"
+        "phpunit/phpunit": "^5.0",
+        "liron-li/php-zookeeper-ide-helper": "^0.1.0",
+        "eaglewu/swoole-ide-helper": "dev-master"
     },
     "config": {
         "bin-dir": "bin"
@@ -28,7 +30,7 @@
             "": "src"
         },
         "files": [
-            "helpers.php"
+            "src/helpers.php"
         ]
     }
 }

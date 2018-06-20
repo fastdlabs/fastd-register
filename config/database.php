@@ -8,5 +8,13 @@
  */
 
 return [
-
+    'default' => [
+        'adapter' => 'mysql',
+        'name' => 'homestead',
+        'host' => '10.0.75.1',
+        'user' => 'root',
+        'pass' => 'root',
+        'charset' => 'utf8',
+        'port' => 3306,
+    ]
 ];

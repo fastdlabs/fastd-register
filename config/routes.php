@@ -1,5 +1,4 @@
 <?php
 
-route()->get('/', 'ServicesController@collections');
-route()->get('/{name}', 'ServicesController@query');
-route()->post('/', 'ServicesController@node');
+route()->get('/v1/catalog/services', 'CatalogController@list');
+route()->get('/v1/catalog/service/{service}', 'CatalogController@show');
