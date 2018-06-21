@@ -50,16 +50,22 @@ class RegistryTcpServer extends TCP
 
         //注册配置
         registry()->register($this->entity);
-        $this->broadcastUpdateNode();
+
+        if ($this->isBroadcast()) {
+            $this->broadcastUpdateNode();
+        }
         $server->send($fd, 'ok');
     }
 
     public function doClose(swoole_server $server, $fd, $fromId)
     {
         if ($this->entity) {
-            registry()->deRegister($this->entity);
             //服务断开连接，移除注册配置
-            $this->broadcastUpdateNode();
+            registry()->deRegister($this->entity);
+
+            if ($this->isBroadcast()) {
+                $this->broadcastUpdateNode();
+            }
         }
         print_r('服务断开' . PHP_EOL);
     }
@@ -78,8 +84,19 @@ class RegistryTcpServer extends TCP
 
     protected function broadcastUpdateNode()
     {
-        $client = new Broadcast('tcp://0.0.0.0:9996');
+        $client = new Broadcast(config()->get('producer_server.host'));
         $client->start();
         print_r('通知广播服务节点更新' . PHP_EOL);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isBroadcast()
+    {
+        if (config()->has('producer_server.host')) {
+            return true;
+        }
+        return false;
     }
 }

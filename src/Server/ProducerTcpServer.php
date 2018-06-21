@@ -14,7 +14,7 @@ use FastD\Servitization\OnWorkerStart;
 use FastD\Swoole\Server\TCP;
 use swoole_server;
 
-class ConsumerTcpServer extends TCP
+class ProducerTcpServer extends TCP
 {
     use OnWorkerStart;
 

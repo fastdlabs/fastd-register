@@ -15,19 +15,14 @@ return [
         'port' => 6379,
         'auth' => '',
 
-        //mysql
-        /*'driver' => 'mysql',
-        'host' => '127.0.0.1',
-        'port' => 3306,
-        'user' => 'root',
-        'password' => '123',
-        'dbname' => 'Demo'*/
-
         //zookeeper
-        /*'scheme' => 'zookeeper',
+        /*'driver' => 'zookeeper',
         'host' => '127.0.0.1',
         'port' => 2181,
         //集群模式
-        'url' => '127.0.0.1:2181,127.0.0.1:2182'*/
+        //'url' => '127.0.0.1:2181,127.0.0.1:2182'*/
+    ],
+    'producer_server' => [
+        'host' => 'tcp://0.0.0.0:9996'
     ]
 ];

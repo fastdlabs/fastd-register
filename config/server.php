@@ -27,7 +27,7 @@ return [
         ],
         [
             'host' => '0.0.0.0:9996',
-            'class' => \Server\ConsumerTcpServer::class
+            'class' => \Server\ProducerTcpServer::class
         ]
     ],
 ];
