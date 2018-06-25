@@ -1,4 +1,12 @@
 <?php
 
-route()->get('/v1/catalog/services', 'CatalogController@list');
-route()->get('/v1/catalog/service/{service}', 'CatalogController@show');
+route()->group('/v1',function (){
+    route()->group('/catalog',function (){
+        route()->post('/service','CatalogController@post');
+        route()->delete('/service','CatalogController@delete');
+        route()->patch('/service','CatalogController@patch');
+        route()->get('/services', 'CatalogController@list');
+        route()->get('/service/{service}', 'CatalogController@show');
+    });
+});
+
