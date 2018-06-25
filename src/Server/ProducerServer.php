@@ -10,15 +10,15 @@ namespace Server;
 
 
 use FastD\Packet\Json;
-use FastD\Servitization\OnWorkerStart;
-use FastD\Swoole\Server\TCP;
+use FastD\Servitization\Server\TCPServer;
 use swoole_server;
 
-class ProducerTcpServer extends TCP
+/**
+ * Class ProducerTcpServer
+ * @package Server
+ */
+class ProducerServer extends TCPServer
 {
-    use OnWorkerStart;
-
-
     public function doWork(swoole_server $server, $fd, $data, $from_id)
     {
         //校验格式

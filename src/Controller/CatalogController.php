@@ -7,7 +7,6 @@ use FastD\Http\Response;
 use FastD\Http\ServerRequest;
 use Registry\Node;
 use Runner\Validator\Validator;
-use Support\Registry\RegistryEntity;
 
 /**
  * Class CatalogController

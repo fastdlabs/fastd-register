@@ -34,6 +34,12 @@ class Node extends ArrayObject
     {
         parent::__construct($input, $flags, $iterator_class);
 
+        $info = parse_url($this->getHost());
+
+        if (isset($info['port']) && !$this->has('service_port')) {
+            $this->set('service_port', $info['port']);
+        }
+
         $this->hash = md5($this->getHost().$this->getPort());
     }
 
