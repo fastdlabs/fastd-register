@@ -6,25 +6,24 @@
  * Time: 12:32
  */
 
-namespace Support\Registry\Adapter;
+namespace Registry;
 
-
-use Support\Registry\RegistryEntity;
 
 interface RegistryInterface
 {
-    /**
-     * 注册服务
-     * @param RegistryEntity $entity
-     */
-    public function register(RegistryEntity $entity);
-
+    const REGISTRY_PREFIX = 'fastd.registry.';
 
     /**
-     * 移除服务
-     * @param RegistryEntity $entity
+     * @param Node $node
+     * @return Node
      */
-    public function deRegister(RegistryEntity $entity);
+    public function register(Node $node);
+
+    /**
+     * @param Node $node
+     * @return mixed
+     */
+    public function unregister(Node $node);
 
 
     /**

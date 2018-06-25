@@ -8,13 +8,14 @@
  */
 
 return [
-    'registry_server' => [
+    'registry' => [
         //redis
-        'driver' => 'redis',
-        'host' => '10.0.75.1',
-        'port' => 6379,
-        'auth' => '',
-
+        'driver' => Registry\Adapter\RedisRegistry::class,
+        'options' => [
+            'host' => '112.124.40.205',
+            'port' => 6379,
+            'auth' => 'mmclick',
+        ],
         //zookeeper
         /*'driver' => 'zookeeper',
         'host' => '127.0.0.1',

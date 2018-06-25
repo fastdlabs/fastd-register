@@ -9,8 +9,7 @@
 namespace Support\Registry\Adapter;
 
 
-use Support\Common\Zookeeper;
-use Support\Registry\RegistryEntity;
+use Registry\RegistryInterface;
 
 class ZookeeperRegistry implements RegistryInterface
 {
@@ -39,7 +38,7 @@ class ZookeeperRegistry implements RegistryInterface
     /**
      * @param RegistryEntity $entity
      */
-    public function register(RegistryEntity $entity)
+    public function unregister(RegistryEntity $entity)
     {
         $registry = $entity->toArray();
 

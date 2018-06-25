@@ -26,6 +26,7 @@ return [
         \FastD\ServiceProvider\LoggerServiceProvider::class,
         \FastD\ServiceProvider\DatabaseServiceProvider::class,
         \FastD\ServiceProvider\CacheServiceProvider::class,
+        \Provider\RegisterProvider::class,
     ],
 
     /**

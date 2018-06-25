@@ -6,14 +6,12 @@
  * Time: 10:40
  */
 
-use Support\Registry\Registry;
-
 if(!function_exists('registry')) {
     /**
-     * @return Registry
+     * @return \Registry\Registry
      */
     function registry()
     {
-        return new Registry();
+        return app()->get('registry');
     }
 }

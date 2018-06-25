@@ -6,12 +6,13 @@
  * Time: 14:03
  */
 
-namespace Support\Registry\Adapter;
+namespace Registry\Adapter;
 
 
-use Support\Registry\RegistryEntity;
+use Registry\Node;
+use Registry\Registry;
 
-class RedisRegistry implements RegistryInterface
+class RedisRegistry extends Registry
 {
     /**
      * @var \Redis
@@ -20,8 +21,10 @@ class RedisRegistry implements RegistryInterface
 
     protected $config;
 
-    protected $prefix = 'fastd.registry.';
-
+    /**
+     * RedisRegistry constructor.
+     * @param $config
+     */
     public function __construct($config)
     {
         $this->redis = new \Redis();
@@ -34,33 +37,31 @@ class RedisRegistry implements RegistryInterface
     }
 
     /**
-     * @return string
+     * @param Node $node
+     * @return Node
      */
-    protected function getPrefix()
+    public function register(Node $node)
     {
-        return $this->prefix;
+        $key = $this->getKey($node->getService());
+        $hashKey = $node->getHash();
+
+        if (false !== $this->redis->hSet($key, $hashKey, $node->json())) {
+            return $node;
+        }
+
+        throw new \RuntimeException($this->redis->getLastError());
     }
 
     /**
-     * @param RegistryEntity $entity
+     * @param Node $node
+     * @return bool
      */
-    public function register(RegistryEntity $entity)
+    public function unregister(Node $node)
     {
-        $registry = $entity->toArray();
+        $key = $this->getKey($node->getService());
+        $hashKey = $node->getHash();
 
-        $this->redis->hSet($this->getPrefix() . "{$registry['service']}", "{$registry['node']}", $entity->toJson());
-    }
-
-    /**
-     * @param RegistryEntity $entity
-     */
-    public function deRegister(RegistryEntity $entity)
-    {
-        $this->list();
-
-        $registry = $entity->toArray();
-
-        $this->redis->hDel($this->getPrefix() . "{$registry['service']}", "{$registry['node']}");
+        return $this->redis->hDel($key, $hashKey);
     }
 
     /**
@@ -71,12 +72,13 @@ class RedisRegistry implements RegistryInterface
         $this->redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
 
         $iterator = null;
+        $services = [];
         while ($keys = $this->redis->scan($iterator, $this->getPrefix() . '*')) {
             foreach ($keys as $key) {
                 $services[] = str_replace($this->getPrefix(), '', $key);
             }
         }
-        return $services ?? [];
+        return $services;
     }
 
     /**
@@ -85,10 +87,10 @@ class RedisRegistry implements RegistryInterface
      */
     public function show($service)
     {
-        $service = $this->getPrefix() . $service;
+        $service = $this->getKey($service);
 
         if (!$this->redis->exists($service)) {
-            return ["nodes" => []];
+            return [];
         }
 
         $nodes = $this->redis->hGetAll($service);
@@ -96,6 +98,7 @@ class RedisRegistry implements RegistryInterface
         foreach ($nodes as $node => $data) {
             $nodes[$node] = json_decode($data, true);
         }
-        return ["nodes" => $nodes];
+
+        return $nodes;
     }
 }
