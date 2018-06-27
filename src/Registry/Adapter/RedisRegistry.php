@@ -19,7 +19,10 @@ class RedisRegistry extends Registry
      */
     protected $redis;
 
-    protected $config;
+    /**
+     * @var
+     */
+    protected $config = [];
 
     /**
      * RedisRegistry constructor.
