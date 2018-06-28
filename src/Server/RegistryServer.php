@@ -20,6 +20,11 @@ class RegistryServer extends TCPServer
      */
     protected $entity;
 
+    /**
+     * @param swoole_server $server
+     * @param $fd
+     * @param $fromId
+     */
     public function doClose(swoole_server $server, $fd, $fromId)
     {
         if ($this->entity) {
@@ -30,9 +35,12 @@ class RegistryServer extends TCPServer
                 $this->broadcastUpdateNode();
             }
         }
-        print_r('服务断开' . PHP_EOL);
+        print_r('连接断开' . PHP_EOL);
     }
 
+    /**
+     * @param $data
+     */
     protected function validate($data)
     {
         $rules = [
@@ -45,6 +53,9 @@ class RegistryServer extends TCPServer
         $validator->validate();
     }
 
+    /**
+     * 广播到每个代理节点
+     */
     protected function broadcastUpdateNode()
     {
         $client = new Broadcast(config()->get('producer_server.host'));
