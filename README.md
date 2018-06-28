@@ -1,29 +1,43 @@
 # FastD Registry
 
-注册中心
+FastD Registry 是PHP的服务化框架的服务发现-注册中心，独立与框架与其他依赖，可以自由整合到 fastd 中，以 provider 的方式进行服务提供。
 
-## 注册中心配置
-在`config\config.php`中添加register_server,当前支持Redis、Zookeeper
+使用 zookeeper 和 redis 作为服务发现驱动
+
+## 使用
+
+在 `config\config.php` 中添加 register_server
 
 ### Redis
-```
+```php
+<?php
+return [
     'registry_server' => [
         'driver' => 'redis',
-        'host' => '10.0.75.1',
-        'port' => 6379,
-        'auth' => '',
+        'options' => [
+            'host' => '10.0.75.1',
+            'port' => 6379,
+            'auth' => '',   
+        ],
     ],
+];
+    
 ```
 
 ### Zookeeper
-```
+```php
+<?php
+return  [
     'registry_server' => [
-        'driver' => 'zookeeper',
-        'host' => '127.0.0.1',
-        'port' => 2181,
-        //集群模式
-        //'url' => '127.0.0.1:2181,127.0.0.1:2182'
+        'driver' => 'redis',
+        'options' => [
+            'host' => '10.0.75.1',
+            'port' => 6379,
+            'auth' => '',   
+        ],
     ],
+];
+    
 ```
 ## 拓展
 
@@ -31,22 +45,28 @@
 
 * 在`config\server.php` 中添加
 
-```
+```php
+<?php
+return [
     'listeners' => [
         [
             'host' => '0.0.0.0:9996',
             'class' => \Server\ProducerTcpServer::class
         ]
-    ]，
+    ]
+];
 ```
 
 * 在`config\config.php` 中添加
 
-  ```
+```php
+<?php
+return [
     'producer_server' => [
         'host' => 'tcp://0.0.0.0:9996'
-      ]
-  ```
+    ]
+];
+ ```
 
 
 ### Support
