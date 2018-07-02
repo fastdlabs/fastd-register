@@ -6,16 +6,15 @@
  * Time: 14:28
  */
 
-namespace Registry;
+namespace Registry\Node;
 
-
-use FastD\Utils\ArrayObject;
+use Registry\Contracts\NodeAbstract;
 
 /**
- * Class Node
+ * Class ServiceNode
  * @package Registry
  */
-class Node extends ArrayObject
+class ServiceNode extends NodeAbstract
 {
     /**
      * The node unique hash.
@@ -25,7 +24,7 @@ class Node extends ArrayObject
     protected $hash;
 
     /**
-     * Node constructor.
+     * ServiceNode constructor.
      * @param array $input
      * @param int $flags
      * @param string $iterator_class
@@ -34,19 +33,19 @@ class Node extends ArrayObject
     {
         parent::__construct($input, $flags, $iterator_class);
 
-        $info = parse_url($this->getHost());
+        $info = parse_url($this->host());
 
         if (isset($info['port']) && !$this->has('service_port')) {
             $this->set('service_port', $info['port']);
         }
 
-        $this->hash = md5($this->getHost().$this->getPort());
+        $this->hash = md5($this->host() . ':' . $this->port());
     }
 
     /**
      * @return string
      */
-    public function getHash()
+    public function hash()
     {
         return $this->hash;
     }
@@ -54,7 +53,7 @@ class Node extends ArrayObject
     /**
      * @return string
      */
-    public function getService()
+    public function service()
     {
         return $this->get('service_name');
     }
@@ -62,7 +61,7 @@ class Node extends ArrayObject
     /**
      * @return string
      */
-    public function getPid()
+    public function pid()
     {
         return $this->get('pid');
     }
@@ -70,7 +69,7 @@ class Node extends ArrayObject
     /**
      * @return string
      */
-    public function getHost()
+    public function host()
     {
         return $this->get('service_host');
     }
@@ -78,7 +77,7 @@ class Node extends ArrayObject
     /**
      * @return string
      */
-    public function getPort()
+    public function port()
     {
         return $this->get('service_port');
     }
@@ -86,13 +85,21 @@ class Node extends ArrayObject
     /**
      * @return string
      */
-    public function getExtra()
+    public function extra()
     {
         return $this->get('extra');
     }
 
-    public function json()
+    public function toJson()
     {
         return json_encode($this->getArrayCopy());
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getArrayCopy();
     }
 }

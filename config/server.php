@@ -8,7 +8,7 @@
  */
 
 return [
-    'host' => '0.0.0.0:9993',
+    'host' => '127.0.0.1:9993',
     'class' => \FastD\Servitization\Server\HTTPServer::class,
     'options' => [
         'pid_file' => __DIR__ . '/../runtime/pid/' . app()->getName() . '.pid',
@@ -21,7 +21,7 @@ return [
     ],
     'listeners' => [
         [
-            'host' => '0.0.0.0:9999',
+            'host' => '127.0.0.1:9999',
             'class' => \Server\RegistryServer::class,
         ],
         [

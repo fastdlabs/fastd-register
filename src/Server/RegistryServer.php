@@ -13,6 +13,10 @@ use Runner\Validator\Validator;
 use Support\Consumer\Broadcast;
 use swoole_server;
 
+/**
+ * Class RegistryServer
+ * @package Server
+ */
 class RegistryServer extends TCPServer
 {
     /**
@@ -29,12 +33,13 @@ class RegistryServer extends TCPServer
     {
         if ($this->entity) {
             //服务断开连接，移除注册配置
-            registry()->unregister($this->entity);
+            registry()->remove($this->entity);
 
             if ($this->isBroadcast()) {
                 $this->broadcastUpdateNode();
             }
         }
+
         print_r('连接断开' . PHP_EOL);
     }
 
@@ -60,6 +65,7 @@ class RegistryServer extends TCPServer
     {
         $client = new Broadcast(config()->get('producer_server.host'));
         $client->start();
+
         print_r('通知广播服务节点更新' . PHP_EOL);
     }
 
@@ -71,6 +77,7 @@ class RegistryServer extends TCPServer
         if (config()->has('producer_server.host')) {
             return true;
         }
+
         return false;
     }
 }

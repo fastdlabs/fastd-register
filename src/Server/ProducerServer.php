@@ -5,9 +5,7 @@
  * Date: 2018/6/19
  * Time: 15:42
  */
-
 namespace Server;
-
 
 use FastD\Packet\Json;
 use FastD\Servitization\Server\TCPServer;
@@ -19,10 +17,18 @@ use swoole_server;
  */
 class ProducerServer extends TCPServer
 {
+    /**
+     * @param swoole_server $server
+     * @param $fd
+     * @param $data
+     * @param $from_id
+     * @return int|mixed
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     public function doWork(swoole_server $server, $fd, $data, $from_id)
     {
         //校验格式
-        $data = Json::decode($data, true);
+        $data = Json::decode($data);
         if (!$data || !is_array($data) || !isset($data['type'])) {
             return 0;
         }
@@ -37,10 +43,13 @@ class ProducerServer extends TCPServer
         }
     }
 
-
+    /**
+     * @param swoole_server $server
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     protected function broadcast(swoole_server $server)
     {
-        $data = Json::encode(registry()->list());
+        $data = Json::encode(registry()->all());
 
         foreach ($server->connections as $fd) {
             $server->send($fd, $data);
@@ -48,6 +57,12 @@ class ProducerServer extends TCPServer
         print_r('广播' . PHP_EOL);
     }
 
+    /**
+     * @param swoole_server $server
+     * @param $fd
+     * @param $service
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
     protected function show(swoole_server $server, $fd, $service)
     {
         $data = registry()->show($service);

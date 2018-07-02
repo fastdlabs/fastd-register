@@ -1,12 +1,16 @@
 <?php
-
+/**
+ * @author    fastdlabs
+ * @copyright 2018
+ *
+ * @link      https://www.github.com/janhuang
+ * @link      http://www.fast-d.cn/
+ */
 namespace Controller;
-
 
 use FastD\Http\Response;
 use FastD\Http\ServerRequest;
-use Registry\Node;
-use Runner\Validator\Validator;
+use Registry\Node\ServiceNode;
 
 /**
  * Class CatalogController
@@ -14,71 +18,57 @@ use Runner\Validator\Validator;
  */
 class CatalogController
 {
+
     /**
      * @param ServerRequest $request
      * @return Response
+     * @throws \Exception
      */
-    public function create(ServerRequest $request)
+    public function store(ServerRequest $request)
     {
-        $data = $request->getParsedBody();
+        $data = validator($request->getParsedBody());
 
-        $rules = [
-            'service_host' => 'required|url',
-            'service_name' => 'required|string',
-            'service_pid' => 'required|numeric',
-        ];
+        $node = registry()->store(ServiceNode::make($data));
 
-        $validator = new Validator($data, $rules);
-        $validator->validate();
-        $node = registry()->register(Node::make($validator->data()));
-        return json($node->getArrayCopy(), Response::HTTP_CREATED);
+        return json($node->toArray(), Response::HTTP_CREATED);
     }
 
     /**
      * @param ServerRequest $request
      * @return Response
+     * @throws \Exception
      */
-    public function patch(ServerRequest $request)
+    public function update(ServerRequest $request)
     {
-        $data = $request->getParsedBody();
-        $rules = [
-            'service_host' => 'required|url',
-            'service_name' => 'required|string',
-            'service_pid' => 'required|numeric',
-        ];
+        $data = validator($request->getParsedBody());
 
-        $validator = new Validator($data, $rules);
-        $validator->validate();
-        $node = registry()->register(Node::make($validator->data()));
-        return json($node->getArrayCopy());
+        $node = registry()->store(ServiceNode::make($data));
+
+        return json($node->toArray());
     }
 
     /**
+    /**
      * @param ServerRequest $request
      * @return Response
+     * @throws \Exception
      */
     public function delete(ServerRequest $request)
     {
-        $data = $request->getParsedBody();
-        $rules = [
-            'service_host' => 'required|url',
-            'service_name' => 'required|string',
-            'service_pid' => 'required|numeric',
-        ];
+        $data = validator($request->getParsedBody());
 
-        $validator = new Validator($data, $rules);
-        $validator->validate();
-        registry()->unregister(Node::make($validator->data()));
-        return json([], Response::HTTP_NO_CONTENT);
+        registry()->remove(ServiceNode::make($data));
+
+        return json(['success removed']);
     }
 
     /**
      * @param ServerRequest $request
      * @return Response
      */
-    public function list(ServerRequest $request)
+    public function index(ServerRequest $request)
     {
-        return json(registry()->list());
+        return json(registry()->all());
     }
 
     /**
@@ -88,6 +78,7 @@ class CatalogController
     public function show(ServerRequest $request)
     {
         $service = $request->getAttribute('service');
-        return json(registry()->show($service));
+
+        return json(registry()->fetch($service));
     }
 }

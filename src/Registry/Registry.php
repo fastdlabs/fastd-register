@@ -8,86 +8,66 @@
 
 namespace Registry;
 
+use Registry\Contracts\NodeAbstract;
+use Registry\Contracts\StorageInterface;
+
 /**
  * Class Registry
+ *
+ * @method NodeAbstract store(NodeAbstract $node)
+ * @method bool         remove(NodeAbstract $node)
+ * @method array        fetch(string $key)
+ * @method array        all()
+ *
  * @package Registry
  */
-class Registry implements RegistryInterface
+class Registry
 {
     /**
-     * @var RegistryInterface
+     * @var StorageInterface
      */
-    protected  $registry;
+    protected $driver;
 
     /**
      * Registry constructor.
      */
-    public function __construct()
+    public function __construct($config = null)
     {
-        $registry_config = config()->get('registry');
+        !is_null($config) && $this->setDriver($config);
+    }
 
-        if (!isset($registry_config['driver'])) {
+    /**
+     * @param $config
+     */
+    protected function setDriver($config)
+    {
+        if (!isset($config['driver'])) {
             throw new \RuntimeException('Cannot be use register driver.');
         }
 
-        $driver = ucfirst($registry_config['driver']);
+        $driver = ucfirst($config['driver']);
 
-        if (!class_exists($driver)) {
-            return new \LogicException(sprintf('Cannot support register driver %s', $driver));
+        if (!class_exists($config['driver'])) {
+            throw new \LogicException(sprintf('Cannot support register driver %s', $driver));
         }
 
-        $this->registry = new $driver($registry_config['options']);
+        $this->driver = new $driver($config['options']);
     }
 
     /**
-     * @return string
+     * @param $name
+     * @param $arguments
+     * @return $this
+     * @throws \Exception
      */
-    public function getPrefix()
+    public function __call($name, $arguments)
     {
-        return static::REGISTRY_PREFIX;
-    }
+        if (!in_array($name, ['store', 'remove', 'fetch', 'all'])) {
+            $class = get_class($this);
 
-    /**
-     * @param $key
-     * @return string
-     */
-    public function getKey($key)
-    {
-        return $this->getPrefix() . $key;
-    }
+            abort("Call to undefined method {$class}::{$name}()", 500);
+        }
 
-    /**
-     * @param Node $node
-     * @return Node
-     */
-    public function register(Node $node)
-    {
-        return $this->registry->register($node);
-    }
-
-    /**
-     * @param Node $entity
-     * @return mixed
-     */
-    public function unregister(Node $entity)
-    {
-        return $this->registry->unregister($entity);
-    }
-
-    /**
-     * @return Node[]
-     */
-    public function list()
-    {
-        return $this->registry->list();
-    }
-
-    /**
-     * @param $service
-     * @return array
-     */
-    public function show($service)
-    {
-        return $this->registry->show($service);
+        return call_user_func_array([$this->driver, $name], $arguments);
     }
 }

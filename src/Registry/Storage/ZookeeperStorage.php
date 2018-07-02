@@ -9,9 +9,12 @@
 namespace Support\Registry\Adapter;
 
 
-use Registry\RegistryInterface;
+use Registry\Contracts\NodeAbstract;
+use Registry\Contracts\StorageInterface;
+use Registry\Node\ServiceNode;
+use Support\Common\Zookeeper;
 
-class ZookeeperRegistry implements RegistryInterface
+class ZookeeperStorage implements StorageInterface
 {
     /**
      * @var \zookeeper
@@ -79,5 +82,49 @@ class ZookeeperRegistry implements RegistryInterface
             $nodes[$node] = json_decode($this->zookeeper->get($service . '/' . $data));
         }
         return ["nodes" => $nodes];
+    }
+
+    /**
+     * @param ServiceNode $node
+     * @return ServiceNode
+     */
+    public function register(ServiceNode $node)
+    {
+        // TODO: Implement register() method.
+    }
+
+    /**
+     * @param NodeAbstract $node
+     * @return NodeAbstract
+     */
+    public function store(NodeAbstract $node)
+    {
+        // TODO: Implement store() method.
+    }
+
+    /**
+     * @param NodeAbstract $node
+     * @return boolean
+     */
+    public function remove(NodeAbstract $node)
+    {
+        // TODO: Implement remove() method.
+    }
+
+    /**
+     * @param $key
+     * @return NodeAbstract
+     */
+    public function fetch($key)
+    {
+        // TODO: Implement fetch() method.
+    }
+
+    /**
+     * @return array
+     */
+    public function all()
+    {
+        // TODO: Implement all() method.
     }
 }
