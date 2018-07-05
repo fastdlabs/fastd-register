@@ -25,6 +25,8 @@ class RegistryServer extends TCPServer
     protected $entity;
 
     /**
+     * 节点断开，处理节点
+     *
      * @param swoole_server $server
      * @param $fd
      * @param $fromId
@@ -41,21 +43,6 @@ class RegistryServer extends TCPServer
         }
 
         print_r('连接断开' . PHP_EOL);
-    }
-
-    /**
-     * @param $data
-     */
-    protected function validate($data)
-    {
-        $rules = [
-            'service_host' => 'required|url',
-            'service_name' => 'required|string',
-            'service_pid' => 'required|numeric',
-        ];
-
-        $validator = new Validator($data, $rules);
-        $validator->validate();
     }
 
     /**

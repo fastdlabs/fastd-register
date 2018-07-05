@@ -17,13 +17,6 @@ use Registry\Contracts\NodeAbstract;
 class ServiceNode extends NodeAbstract
 {
     /**
-     * The node unique hash.
-     *
-     * @var string
-     */
-    protected $hash;
-
-    /**
      * ServiceNode constructor.
      * @param array $input
      * @param int $flags
@@ -31,6 +24,8 @@ class ServiceNode extends NodeAbstract
      */
     public function __construct($input = array(), $flags = 0, $iterator_class = "ArrayIterator")
     {
+        $input['hash'] =  md5(json_encode($input));
+
         parent::__construct($input, $flags, $iterator_class);
 
         $info = parse_url($this->host());
@@ -38,8 +33,6 @@ class ServiceNode extends NodeAbstract
         if (isset($info['port']) && !$this->has('service_port')) {
             $this->set('service_port', $info['port']);
         }
-
-        $this->hash = md5($this->host() . ':' . $this->port());
     }
 
     /**
@@ -47,7 +40,7 @@ class ServiceNode extends NodeAbstract
      */
     public function hash()
     {
-        return $this->hash;
+        return $this->get('hash');
     }
 
     /**

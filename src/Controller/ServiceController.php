@@ -27,8 +27,6 @@ class ServiceController
     {
         $data = validator($request->getParsedBody());
 
-        $data['statue'] = 'running';
-
         $node = registry()->store(ServiceNode::make($data));
 
         return json($node->toArray(), Response::HTTP_CREATED);
@@ -43,7 +41,10 @@ class ServiceController
     {
         $data = validator($request->getParsedBody());
 
-        $node = registry()->store(ServiceNode::make($data));
+        $node = ServiceNode::make($data);
+        $node->set('hash', $request->getAttribute('service'));
+
+        $node = registry()->store($node);
 
         return json($node->toArray());
     }

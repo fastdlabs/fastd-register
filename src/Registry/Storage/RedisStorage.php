@@ -95,11 +95,7 @@ class RedisStorage implements StorageInterface
             abort('http not found', 404);
         }
 
-        $nodes = $this->client->hgetall($key);
-
-        $node = array_shift($nodes);
-
-        return json_decode($node, true);
+        return $this->client->hgetall($key);
     }
 
     /**
@@ -107,10 +103,12 @@ class RedisStorage implements StorageInterface
      */
     public function all()
     {
+        $nodes = [];
+
         while ($keys = $this->client->keys($this->prefix . '*')) {
             foreach ($keys as $key) {
                 foreach ((array)$this->client->hgetall($key) as $value) {
-                    $nodes[str_replace($this->prefix, '', $key)] = json_decode($value, true);
+                    $nodes[str_replace($this->prefix, '', $key)][] = json_decode($value, true);
                 }
             }
 
