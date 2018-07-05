@@ -6,6 +6,8 @@
  * Time: 10:40
  */
 
+use Runner\Validator\Validator;
+
 if (!function_exists('registry')) {
     /**
      * @return \Registry\Registry
@@ -27,10 +29,11 @@ if (!function_exists('validator')) {
         is_null($rules) && $rules = [
             'service_host' => 'required|url',
             'service_name' => 'required|string',
-            'service_pid' => 'required|numeric',
+//            'service_port' => 'required|numeric',
+//            'service_pid' => 'numeric',
         ];
 
-        $validator = new \Runner\Validator\Validator($data, $rules);
+        $validator = new Validator($data, $rules);
 
         if (!$validator->validate()) {
             $messages = '';

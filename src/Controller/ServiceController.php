@@ -16,9 +16,8 @@ use Registry\Node\ServiceNode;
  * Class CatalogController
  * @package Controller
  */
-class CatalogController
+class ServiceController
 {
-
     /**
      * @param ServerRequest $request
      * @return Response
@@ -27,6 +26,8 @@ class CatalogController
     public function store(ServerRequest $request)
     {
         $data = validator($request->getParsedBody());
+
+        $data['statue'] = 'running';
 
         $node = registry()->store(ServiceNode::make($data));
 
@@ -59,7 +60,9 @@ class CatalogController
 
         registry()->remove(ServiceNode::make($data));
 
-        return json(['success removed']);
+        return json([
+            'msg' => 'success removed'
+        ]);
     }
 
     /**

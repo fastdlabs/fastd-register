@@ -30,6 +30,7 @@ class Registry
 
     /**
      * Registry constructor.
+     * @param null $config
      */
     public function __construct($config = null)
     {

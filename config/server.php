@@ -8,20 +8,19 @@
  */
 
 return [
-    'host' => '127.0.0.1:9993',
+    'host' => '0.0.0.0:9993',
     'class' => \FastD\Servitization\Server\HTTPServer::class,
     'options' => [
-        'pid_file' => __DIR__ . '/../runtime/pid/' . app()->getName() . '.pid',
-        'log_file' => __DIR__ . '/../runtime/logs/' . app()->getName() . '.pid',
-        'log_level' => 5,
-        'worker_num' => 10,
+        'pid_file' => '/tmp/fastd/' . app()->getName() . '.pid',
+        'worker_num' => 5,
+        'task_num' => 10,
     ],
     'processes' => [
 
     ],
     'listeners' => [
         [
-            'host' => '127.0.0.1:9999',
+            'host' => '0.0.0.0:9999',
             'class' => \Server\RegistryServer::class,
         ],
         [

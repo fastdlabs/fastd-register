@@ -1,9 +1,9 @@
 <?php
 
 route()->group('/v1/services',function (){
-    route()->get('/', 'CatalogController@index');
-    route()->get('/{service}', 'CatalogController@show');
-    route()->post('/','CatalogController@store');
-    route()->delete('/{service}','CatalogController@delete');
-    route()->put('/{service}','CatalogController@update');
+    route()->get('/', 'ServiceController@index');
+    route()->get('/{service}', 'ServiceController@show');
+    route()->post('/','ServiceController@store');
+    route()->delete('/{service}','ServiceController@delete');
+    route()->put('/{service}','ServiceController@update');
 });
