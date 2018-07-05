@@ -57,13 +57,14 @@ class ServiceController
      */
     public function delete(ServerRequest $request)
     {
-        $data = validator($request->getParsedBody());
-
-        registry()->remove(ServiceNode::make($data));
-
-        return json([
-            'msg' => 'success removed'
+        $node = ServiceNode::make([
+            'hash' => $request->getAttribute('node'),
+            'service_name' => $request->getAttribute('service')
         ]);
+
+        registry()->remove($node);
+
+        return json([], Response::HTTP_NO_CONTENT);
     }
 
     /**

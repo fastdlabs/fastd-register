@@ -77,9 +77,14 @@ class RedisStorage implements StorageInterface
     public function remove(NodeAbstract $node)
     {
         $key = $this->getKey($node->service());
-        $hashKey = $node->hash();
 
-        return $this->client->hdel($key, (array)$hashKey);
+        // remove hash item
+        if ($node->has('hash') && !empty($node->hash())) {
+            return $this->client->hdel($key, [$node->hash()]);
+        }
+
+        // remove key
+        return $this->client->del([$node->service()]);
     }
 
     /**
@@ -95,7 +100,12 @@ class RedisStorage implements StorageInterface
             abort('http not found', 404);
         }
 
-        return $this->client->hgetall($key);
+        $nodes = [];
+        foreach ($this->client->hgetall($key) as $value) {
+            $nodes[] = json_decode($value, true);
+        }
+
+        return $nodes;
     }
 
     /**

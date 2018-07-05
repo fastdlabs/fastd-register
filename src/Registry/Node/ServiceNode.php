@@ -24,14 +24,18 @@ class ServiceNode extends NodeAbstract
      */
     public function __construct($input = array(), $flags = 0, $iterator_class = "ArrayIterator")
     {
-        $input['hash'] =  md5(json_encode($input));
+        if (!isset($input['hash'])) {
+            $input['hash'] =  md5(json_encode($input));
+        }
 
         parent::__construct($input, $flags, $iterator_class);
 
-        $info = parse_url($this->host());
+        if ($this->has('service_host')) {
+            $info = parse_url($this->host());
 
-        if (isset($info['port']) && !$this->has('service_port')) {
-            $this->set('service_port', $info['port']);
+            if (isset($info['port']) && !$this->has('service_port')) {
+                $this->set('service_port', $info['port']);
+            }
         }
     }
 

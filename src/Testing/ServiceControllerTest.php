@@ -70,12 +70,22 @@ class ServiceControllerTest extends TestCase
 
     public function testDelete()
     {
+        $request = $this->request('DELETE', '/v1/services/phpunit/04d6f7046e0834d0ac73379ab83bda16');
+        $response = $this->handleRequest($request);
+        $this->equalsStatus($response, Response::HTTP_NO_CONTENT);
 
+        $request = $this->request('DELETE', '/v1/services/phpunit');
+        $response = $this->handleRequest($request);
+        $this->equalsStatus($response, Response::HTTP_NO_CONTENT);
+
+        $request = $this->request('GET', '/v1/services');
+        $response = $this->handleRequest($request);
+        $this->equalsJson($response, []);
     }
 
     public function testShow()
     {
-
+        
     }
 
     public function testIndex()
