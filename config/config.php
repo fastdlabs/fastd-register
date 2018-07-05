@@ -9,11 +9,15 @@
 
 return [
     'registry' => [
-        //redis
-        'driver' => Registry\Adapter\RedisRegistry::class,
+        'driver' => \Registry\Storage\RedisStorage::class, // redis
         'options' => [
-            'host' => '11.11.11.11',
-            'port' => 6379,
+            'prefix' => 'fastd.registry:',
+            'connections' => [
+                'host' => '127.0.0.1',
+                'port' => '6379',
+                'password' => null,
+                'database' => 15,
+            ],
         ],
         //zookeeper
         /*'driver' => 'zookeeper',
