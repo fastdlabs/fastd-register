@@ -10,6 +10,7 @@ namespace Registry;
 
 use Registry\Contracts\NodeAbstract;
 use Registry\Contracts\StorageInterface;
+use Registry\Node\ServiceNode;
 
 /**
  * Class Registry
@@ -50,13 +51,43 @@ class Registry implements StorageInterface
     }
 
     /**
+     * @param $fd
+     * @return mixed|\Symfony\Component\Cache\CacheItem
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getItem($fd)
+    {
+        return cache()->getItem('map.'.$fd);
+    }
+
+    /**
+     * @param $fd
+     * @return bool|ServiceNode
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getNode($fd)
+    {
+        $item = $this->getItem($fd);
+
+        if ($item->isHit()) {
+            $nodeInfo = $item->get();
+            return ServiceNode::make([
+                'service_name' => $nodeInfo['service_name'],
+                'hash' => $nodeInfo['hash'],
+            ]);
+        }
+
+        return false;
+    }
+
+    /**
      * @param NodeAbstract $node
      * @return NodeAbstract
      * @throws \Psr\Cache\InvalidArgumentException
      */
     public function store(NodeAbstract $node)
     {
-        $item = cache()->getItem('map.'.$node->fd());
+        $item = $this->getItem($node->fd());
 
         $item->set($node->toArray());
 
@@ -72,12 +103,10 @@ class Registry implements StorageInterface
      */
     public function remove(NodeAbstract $node)
     {
-        $key = 'map.'.$node->fd();
-
-        $item = cache()->getItem($key);
+        $item = registry()->getItem($node->fd());
 
         if ($item->isHit()) {
-            cache()->deleteItem($key);
+            cache()->deleteItem($item->getKey());
         }
 
         return $this->driver->remove($node);

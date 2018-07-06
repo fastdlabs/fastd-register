@@ -8,8 +8,8 @@
 
 namespace Server;
 
+use FastD\Packet\Json;
 use FastD\Servitization\Server\TCPServer;
-use Registry\Node\ServiceNode;
 use swoole_server;
 
 /**
@@ -18,32 +18,49 @@ use swoole_server;
  */
 class ProducerServer extends TCPServer
 {
+
+    /**
+     * @param swoole_server $server
+     * @param $fd
+     * @param $data
+     * @param $from_id
+     * @return int|mixed
+     * @throws \FastD\Packet\Exceptions\PacketException
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function doWork(swoole_server $server, $fd, $data, $from_id)
+    {
+        $response = parent::doWork($server, $fd, $data, $from_id);
+
+        $node = registry()->getNode($fd);
+
+        $server->task(Json::encode([
+            'service' => $node->service(),
+            'hash' => $node->hash(),
+            'fd' => $fd,
+        ]));
+
+        return $response;
+    }
+
     /**
      * @param swoole_server $server
      * @param $fd
      * @param $fromId
+     * @throws \FastD\Packet\Exceptions\PacketException
      * @throws \Psr\Cache\InvalidArgumentException
      */
     public function doClose(swoole_server $server, $fd, $fromId)
     {
-        $key = 'map.'.$fd;
-        $item = cache()->getItem($key);
-        if ($item->isHit()) {
-            $nodeInfo = $item->get();
-            $node = ServiceNode::make([
-                'service_name' => $nodeInfo['service_name'],
-                'hash' => $nodeInfo['hash'],
-            ]);
+        if (false !== ($node = registry()->getNode($fd))) {
+            $item = registry()->getItem($fd);
             registry()->remove($node);
-            cache()->deleteItem($key);
+            cache()->deleteItem($item->getKey());
+            $server->task(Json::encode([
+                'service' => $node->service(),
+                'hash' => $node->hash(),
+                'fd' => $fd,
+            ]));
         }
-        // 发送广播任务到 ProducerServer
-        $server
-            ->task('broadcast');
-    }
-
-    public function broadcast(swoole_server $server)
-    {
-
     }
 }
