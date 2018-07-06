@@ -8,41 +8,17 @@
 
 namespace Server;
 
-use FastD\Servitization\Server\TCPServer;
-use Registry\Node\ServiceNode;
+use FastD\Servitization\Server\HTTPServer;
 use swoole_server;
 
 /**
  * Class RegistryServer
  * @package Server
  */
-class RegistryServer extends TCPServer
+class RegistryServer extends HTTPServer
 {
-    /**
-     * @var RegistryEntity
-     */
-    protected $entity;
-
-    /**
-     * @param swoole_server $server
-     * @param $fd
-     * @param $fromId
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    public function doClose(swoole_server $server, $fd, $fromId)
+    public function doTask(swoole_server $server, $data, $taskId, $workerId)
     {
-        $key = 'map.'.$fd;
-        $item = cache()->getItem($key);
-        if ($item->isHit()) {
-            $nodeInfo = $item->get();
-            $node = ServiceNode::make([
-                'service_name' => $nodeInfo['service_name'],
-                'hash' => $nodeInfo['hash'],
-            ]);
-            registry()->remove($node);
-            cache()->deleteItem($key);
-        }
-        // 发送广播任务到 ProducerServer
-        $server->task('broadcast');
+        $server->ports[0]->connections;
     }
 }

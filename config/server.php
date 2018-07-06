@@ -8,8 +8,8 @@
  */
 
 return [
-    'host' => '0.0.0.0:9993',
-    'class' => \FastD\Servitization\Server\HTTPServer::class,
+    'host' => '0.0.0.0:9527',
+    'class' => \Server\RegistryServer::class,
     'options' => [
         'pid_file' => '/tmp/fastd/' . app()->getName() . '.pid',
         'worker_num' => 5,
@@ -20,12 +20,8 @@ return [
     ],
     'listeners' => [
         [
-            'name' => 'registry',
-            'host' => '0.0.0.0:9999',
-            'class' => \Server\RegistryServer::class,
-        ],
-        [
-            'host' => '0.0.0.0:9996',
+            'name' => 'producer',
+            'host' => '0.0.0.0:9528',
             'class' => \Server\ProducerServer::class
         ]
     ],

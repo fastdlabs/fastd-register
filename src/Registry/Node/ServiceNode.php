@@ -36,6 +36,6 @@ class ServiceNode extends NodeAbstract
             }
         }
 
-        $this->set('fd', server()->getListener('registry')->getFileDescriptor());
+        $this->set('fd', server()->getListener('producer')->getFileDescriptor());
     }
 }

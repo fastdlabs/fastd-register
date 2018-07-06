@@ -5,10 +5,11 @@
  * Date: 2018/6/19
  * Time: 15:42
  */
+
 namespace Server;
 
-use FastD\Packet\Json;
 use FastD\Servitization\Server\TCPServer;
+use Registry\Node\ServiceNode;
 use swoole_server;
 
 /**
@@ -19,14 +20,30 @@ class ProducerServer extends TCPServer
 {
     /**
      * @param swoole_server $server
-     * @param $taskId
-     * @param $workerId
-     * @param $data
-     * @return mixed|void
+     * @param $fd
+     * @param $fromId
+     * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function onTask(swoole_server $server, $taskId, $workerId, $data)
+    public function doClose(swoole_server $server, $fd, $fromId)
     {
-        // 接受更新任务，广播到所有客户端 agent
-        echo $data;
+        $key = 'map.'.$fd;
+        $item = cache()->getItem($key);
+        if ($item->isHit()) {
+            $nodeInfo = $item->get();
+            $node = ServiceNode::make([
+                'service_name' => $nodeInfo['service_name'],
+                'hash' => $nodeInfo['hash'],
+            ]);
+            registry()->remove($node);
+            cache()->deleteItem($key);
+        }
+        // 发送广播任务到 ProducerServer
+        $server
+            ->task('broadcast');
+    }
+
+    public function broadcast(swoole_server $server)
+    {
+
     }
 }
