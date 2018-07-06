@@ -58,8 +58,8 @@ class ServiceController
     public function delete(ServerRequest $request)
     {
         $node = ServiceNode::make([
+            'service_name' => $request->getAttribute('service'),
             'hash' => $request->getAttribute('node'),
-            'service_name' => $request->getAttribute('service')
         ]);
 
         registry()->remove($node);

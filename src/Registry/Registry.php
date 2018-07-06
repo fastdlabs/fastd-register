@@ -13,15 +13,9 @@ use Registry\Contracts\StorageInterface;
 
 /**
  * Class Registry
- *
- * @method NodeAbstract store(NodeAbstract $node)
- * @method bool         remove(NodeAbstract $node)
- * @method array        fetch(string $key)
- * @method array        all()
- *
  * @package Registry
  */
-class Registry
+class Registry implements StorageInterface
 {
     /**
      * @var StorageInterface
@@ -56,19 +50,53 @@ class Registry
     }
 
     /**
-     * @param $name
-     * @param $arguments
-     * @return $this
-     * @throws \Exception
+     * @param NodeAbstract $node
+     * @return NodeAbstract
+     * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function __call($name, $arguments)
+    public function store(NodeAbstract $node)
     {
-        if (!in_array($name, ['store', 'remove', 'fetch', 'all'])) {
-            $class = get_class($this);
+        $item = cache()->getItem('map.'.$node->fd());
 
-            abort("Call to undefined method {$class}::{$name}()", 500);
+        $item->set($node->toArray());
+
+        cache()->save($item);
+
+        return $this->driver->store($node);
+    }
+
+    /**
+     * @param NodeAbstract $node
+     * @return bool
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function remove(NodeAbstract $node)
+    {
+        $key = 'map.'.$node->fd();
+
+        $item = cache()->getItem($key);
+
+        if ($item->isHit()) {
+            cache()->deleteItem($key);
         }
 
-        return call_user_func_array([$this->driver, $name], $arguments);
+        return $this->driver->remove($node);
+    }
+
+    /**
+     * @param $key
+     * @return array
+     */
+    public function fetch($key)
+    {
+        return $this->driver->fetch($key);
+    }
+
+    /**
+     * @return array
+     */
+    public function all()
+    {
+        return $this->driver->all();
     }
 }

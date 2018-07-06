@@ -20,6 +20,7 @@ return [
     ],
     'listeners' => [
         [
+            'name' => 'registry',
             'host' => '0.0.0.0:9999',
             'class' => \Server\RegistryServer::class,
         ],

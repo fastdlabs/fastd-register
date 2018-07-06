@@ -1,6 +1,6 @@
 <?php
 
-route()->group('/v1/services',function (){
+route()->group('/services',function (){
     route()->get('/', 'ServiceController@index');
     route()->get('/{service}', 'ServiceController@show');
     route()->post('/','ServiceController@store');

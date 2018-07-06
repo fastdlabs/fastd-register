@@ -19,56 +19,14 @@ class ProducerServer extends TCPServer
 {
     /**
      * @param swoole_server $server
-     * @param $fd
+     * @param $taskId
+     * @param $workerId
      * @param $data
-     * @param $from_id
-     * @return int|mixed
-     * @throws \FastD\Packet\Exceptions\PacketException
+     * @return mixed|void
      */
-    public function doWork(swoole_server $server, $fd, $data, $from_id)
+    public function onTask(swoole_server $server, $taskId, $workerId, $data)
     {
-        //校验格式
-        $data = Json::decode($data);
-        if (!$data || !is_array($data) || !isset($data['type'])) {
-            return 0;
-        }
-        switch ($data['type']) {
-            case 'show':
-                $this->show($server, $fd, $data['service']);
-                break;
-            case 'broadcast':
-            default:
-                $this->broadcast($server);
-                break;
-        }
-    }
-
-    /**
-     * @param swoole_server $server
-     * @throws \FastD\Packet\Exceptions\PacketException
-     */
-    protected function broadcast(swoole_server $server)
-    {
-        $data = Json::encode(registry()->all());
-
-        foreach ($server->connections as $fd) {
-            $server->send($fd, $data);
-        }
-        print_r('广播' . PHP_EOL);
-    }
-
-    /**
-     * @param swoole_server $server
-     * @param $fd
-     * @param $service
-     * @throws \FastD\Packet\Exceptions\PacketException
-     */
-    protected function show(swoole_server $server, $fd, $service)
-    {
-        $data = registry()->show($service);
-
-        $server->send($fd, Json::encode($data));
-
-        print_r('发送服务列表' . PHP_EOL);
+        // 接受更新任务，广播到所有客户端 agent
+        echo $data;
     }
 }
