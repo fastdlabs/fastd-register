@@ -4,6 +4,10 @@ FastD Registry 是PHP的服务化框架的服务发现-注册中心，独立与�
 
 使用 zookeeper 和 redis 作为服务发现驱动
 
+> 引用一个图
+
+![](https://github.com/weibocom/motan/wiki/media/14612349319195.jpg)
+
 ## 使用
 
 在 `config\config.php` 中添加 register_server
