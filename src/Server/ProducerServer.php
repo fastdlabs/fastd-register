@@ -10,6 +10,7 @@ namespace Server;
 
 use FastD\Packet\Json;
 use FastD\Servitization\Server\TCPServer;
+use Registry\Contracts\NodeAbstract;
 use swoole_server;
 
 /**
@@ -34,11 +35,13 @@ class ProducerServer extends TCPServer
 
         $node = registry()->getNode($fd);
 
-        $server->task(Json::encode([
-            'service' => $node->service(),
-            'hash' => $node->hash(),
-            'fd' => $fd,
-        ]));
+        if ($node instanceof NodeAbstract) {
+            $server->task(Json::encode([
+                'service' => $node->service(),
+                'hash' => $node->hash(),
+                'fd' => $fd,
+            ]));
+        }
 
         return $response;
     }

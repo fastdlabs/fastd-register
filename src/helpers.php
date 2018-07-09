@@ -27,7 +27,7 @@ if (!function_exists('validator')) {
     function validator($data, $rules = null)
     {
         is_null($rules) && $rules = [
-            'service_host' => 'required|url',
+            'service_host' => 'required|string',
             'service_name' => 'required|string',
 //            'fd' => 'required|numeric',
 //            'service_port' => 'required|numeric',
