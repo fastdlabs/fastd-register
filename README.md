@@ -8,70 +8,21 @@ FastD Registry 是PHP的服务化框架的服务发现-注册中心，独立与�
 
 ![](https://github.com/weibocom/motan/wiki/media/14612349319195.jpg)
 
-## 使用
+* Server提供服务，向Registry注册自身服务，并向注册中心定期发送心跳汇报状态；
+* Client使用服务，需要向注册中心订阅RPC服务，Client根据Registry返回的服务列表，与具体的Sever建立连接，并进行RPC调用。
+* 当Server发生变更时，Registry会同步变更，Client感知后会对本地的服务列表作相应调整。
 
-在 `config\config.php` 中添加 register_server
+> FastD 本身就是一个Server，对外提供服务
 
-### Redis
-```php
-<?php
-return [
-    'registry_server' => [
-        'driver' => 'redis',
-        'options' => [
-            'host' => '10.0.75.1',
-            'port' => 6379,
-            'auth' => '',   
-        ],
-    ],
-];
-    
-```
+原理: 
 
-### Zookeeper
-```php
-<?php
-return  [
-    'registry_server' => [
-        'driver' => 'redis',
-        'options' => [
-            'host' => '10.0.75.1',
-            'port' => 6379,
-            'auth' => '',   
-        ],
-    ],
-];
-    
-```
-## 拓展
+启动注册中心，监听上报端口与查询端口，接受所有服务器上报的数据状态，等待接入。
 
-生产者-消费者模式支持tcp广播
+FastD 可以通过添加 [register-provider](https://github.com/fastdlabs/register-provider) 扩展，让服务在启动的时候，自动向注册中心添加服务信息。
 
-* 在`config\server.php` 中添加
+通过 [sentinel](https://github.com/fastdlabs/sentinel) 可以及时发现有哪些服务可用，然后在客户端就可以更好地使用服务，甚至进行监控告警等。
 
-```php
-<?php
-return [
-    'listeners' => [
-        [
-            'host' => '0.0.0.0:9996',
-            'class' => \Server\ProducerTcpServer::class
-        ]
-    ]
-];
-```
-
-* 在`config\config.php` 中添加
-
-```php
-<?php
-return [
-    'producer_server' => [
-        'host' => 'tcp://0.0.0.0:9996'
-    ]
-];
- ```
-
+## 使用(待补充)
 
 ### Support
 
