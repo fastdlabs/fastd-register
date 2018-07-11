@@ -39,9 +39,21 @@ class RedisStorage implements StorageInterface
      */
     public function __construct($config)
     {
-        $this->prefix = $config['prefix'];
+        $this->prefix = isset($config['prefix']) ? $config['prefix'] : StorageInterface::PREFIX;
 
         $this->client = new Client($config['connections']);
+    }
+
+    /**
+     * @return Client
+     */
+    protected function getClient()
+    {
+        if (false === $this->client->ping()) {
+            $this->client->connect();
+        }
+
+        return $this->client;
     }
 
     /**
@@ -63,8 +75,8 @@ class RedisStorage implements StorageInterface
         $key = $this->getKey($node->service());
         $hashKey = $node->hash();
 
-        if (false === $this->client->hset($key, $hashKey, $node->toJson())) {
-            abort('save failed', 500);
+        if (false === $this->getClient()->hset($key, $hashKey, $node->toJson())) {
+            abort(500,'save failed');
         }
 
         return $node;
@@ -80,11 +92,11 @@ class RedisStorage implements StorageInterface
 
         // remove hash item
         if ($node->has('hash') && !empty($node->hash())) {
-            return $this->client->hdel($key, [$node->hash()]);
+            return $this->getClient()->hdel($key, [$node->hash()]);
         }
 
         // remove key
-        return $this->client->del([$node->service()]);
+        return $this->getClient()->del([$node->service()]);
     }
 
     /**
@@ -96,12 +108,12 @@ class RedisStorage implements StorageInterface
     {
         $key = $this->getKey($key);
 
-        if (!$this->client->exists($key)) {
-            abort('http not found', 404);
+        if (!$this->getClient()->exists($key)) {
+            abort(404, 'http not found');
         }
 
         $nodes = [];
-        foreach ($this->client->hgetall($key) as $value) {
+        foreach ($this->getClient()->hgetall($key) as $value) {
             $nodes[] = json_decode($value, true);
         }
 
@@ -115,9 +127,9 @@ class RedisStorage implements StorageInterface
     {
         $nodes = [];
 
-        while ($keys = $this->client->keys($this->prefix . '*')) {
+        while ($keys = $this->getClient()->keys($this->prefix . '*')) {
             foreach ($keys as $key) {
-                foreach ((array)$this->client->hgetall($key) as $value) {
+                foreach ((array)$this->getClient()->hgetall($key) as $value) {
                     $nodes[str_replace($this->prefix, '', $key)][] = json_decode($value, true);
                 }
             }

@@ -15,6 +15,7 @@ namespace Registry\Contracts;
  */
 interface StorageInterface
 {
+    const PREFIX = 'fastd.registry.';
     /**
      * @param NodeAbstract $node
      * @return NodeAbstract

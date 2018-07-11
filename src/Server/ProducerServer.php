@@ -36,11 +36,7 @@ class ProducerServer extends TCPServer
         $node = registry()->getNode($fd);
 
         if ($node instanceof NodeAbstract) {
-            $server->task(Json::encode([
-                'service' => $node->service(),
-                'hash' => $node->hash(),
-                'fd' => $fd,
-            ]));
+            $this->broadcast($server, $node, $fd);
         }
 
         return $response;
@@ -59,11 +55,22 @@ class ProducerServer extends TCPServer
             $item = registry()->getItem($fd);
             registry()->remove($node);
             cache()->deleteItem($item->getKey());
-            $server->task(Json::encode([
-                'service' => $node->service(),
-                'hash' => $node->hash(),
-                'fd' => $fd,
-            ]));
+            $this->broadcast($server, $node, $fd);
         }
+    }
+
+    /**
+     * @param swoole_server $server
+     * @param NodeAbstract $node
+     * @param $fd
+     * @throws \FastD\Packet\Exceptions\PacketException
+     */
+    public function broadcast(swoole_server $server, NodeAbstract $node, $fd)
+    {
+        $server->task(Json::encode([
+            'service' => $node->service(),
+            'hash' => $node->hash(),
+            'fd' => $fd,
+        ]));
     }
 }

@@ -51,7 +51,7 @@ class RegistryServer extends HTTPServer
                         ]));
                     }
                 }catch (\Exception $e) {
-
+                    continue;
                 }
             }
         }

@@ -11,7 +11,6 @@ return [
     'registry' => [
         'driver' => \Registry\Storage\RedisStorage::class, // redis
         'options' => [
-            'prefix' => 'fastd.registry:',
             'connections' => [
                 'host' => '127.0.0.1',
                 'port' => '6379',
