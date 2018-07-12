@@ -24,10 +24,10 @@ class RegistryServer extends HTTPServer
      * 因此启动时检查的步骤是为了对每个节点进行恢复，并且在客户端重连的时候自动同步
      *
      * @param swoole_server $server
-     * @param $worker_id
      */
-    public function onManagerStart(swoole_server $server, $worker_id)
+    public function onManagerStart(swoole_server $server)
     {
+        parent::onManagerStart($server);
     }
 
     /**
