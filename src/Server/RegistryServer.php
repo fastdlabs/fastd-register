@@ -19,6 +19,18 @@ use swoole_server;
 class RegistryServer extends HTTPServer
 {
     /**
+     * 启动时检查以前的节点是否正常使用
+     * 如果一旦服务发现端无故宕机，那么节点应该无无法得到妥善处理，一旦重启，而不对节点进行查，那么就会出现一些意料之外的问题。
+     * 因此启动时检查的步骤是为了对每个节点进行恢复，并且在客户端重连的时候自动同步
+     *
+     * @param swoole_server $server
+     * @param $worker_id
+     */
+    public function onManagerStart(swoole_server $server, $worker_id)
+    {
+    }
+
+    /**
      * @param swoole_server $server
      * @param $data
      * @param $taskId
@@ -46,8 +58,7 @@ class RegistryServer extends HTTPServer
                     $nodes = registry()->fetch($data['service']);
                     if ($data['fd'] != $fd) {
                         $server->send($fd, Json::encode([
-                            'service' => $data['service'],
-                            'list' => $nodes,
+                            $data['service'] => $nodes,
                         ]));
                     }
                 }catch (\Exception $e) {

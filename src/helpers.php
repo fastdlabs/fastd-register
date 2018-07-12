@@ -6,6 +6,7 @@
  * Time: 10:40
  */
 
+use FastD\Http\Response;
 use Runner\Validator\Validator;
 
 if (!function_exists('registry')) {
@@ -41,7 +42,7 @@ if (!function_exists('validator')) {
             foreach ($validator->messages() as $fieldMessages) {
                 $messages .= implode(';', $fieldMessages) . ';';
             }
-            abort('invalid parameter', $messages);
+            abort(Response::HTTP_BAD_REQUEST, $messages);
         }
 
         return $validator->data();

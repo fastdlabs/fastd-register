@@ -19,8 +19,11 @@ use swoole_server;
  */
 class ProducerServer extends TCPServer
 {
-
     /**
+     * 接受 server 端与 agent 端连接
+     *      server 端处理: 进入控制器处理逻辑，节点存储，并且将该节点信息同步更新到agent，此时仅同步单节点，保持连接
+     *      agent 端端处理: 广播全量节点信息到 agent，保持连接，在首次连接的时候会同步到 agent 端
+     *
      * @param swoole_server $server
      * @param $fd
      * @param $data
@@ -36,7 +39,7 @@ class ProducerServer extends TCPServer
         $node = registry()->getNode($fd);
 
         if ($node instanceof NodeAbstract) {
-            $this->broadcast($server, $node, $fd);
+            $this->broadcast($server, $fd, $node);
         }
 
         return $response;
@@ -55,17 +58,17 @@ class ProducerServer extends TCPServer
             $item = registry()->getItem($fd);
             registry()->remove($node);
             cache()->deleteItem($item->getKey());
-            $this->broadcast($server, $node, $fd);
+            $this->broadcast($server, $fd, $node);
         }
     }
 
     /**
      * @param swoole_server $server
-     * @param NodeAbstract $node
      * @param $fd
+     * @param NodeAbstract|null $node
      * @throws \FastD\Packet\Exceptions\PacketException
      */
-    public function broadcast(swoole_server $server, NodeAbstract $node, $fd)
+    public function broadcast(swoole_server $server, $fd, NodeAbstract $node = null)
     {
         $server->task(Json::encode([
             'service' => $node->service(),
