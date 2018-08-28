@@ -23,7 +23,8 @@ class ServiceNode extends NodeAbstract
     public function __construct($input = array())
     {
         if (!isset($input['hash'])) {
-            $input['hash'] =  md5(json_encode($input));
+            $hash = $input['ip'] ?? '' . ':' . $input['service_port'] ?? '';
+            $input['hash'] = md5($hash);
         }
 
         parent::__construct($input, 0, 'ArrayIterator');
@@ -34,6 +35,13 @@ class ServiceNode extends NodeAbstract
             if (isset($info['port']) && !$this->has('service_port')) {
                 $this->set('service_port', $info['port']);
             }
+        }
+
+        if (!$this->has('check')) {
+            $this->set('check', [
+                'ttl' => 10,
+                'time' => time()
+            ]);
         }
 
         $this->set('fd', server()->getListener('producer')->getFileDescriptor());

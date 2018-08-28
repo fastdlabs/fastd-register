@@ -66,6 +66,14 @@ abstract class NodeAbstract extends ArrayObject implements NodeInterface
         return $this->get('extra');
     }
 
+    /**
+     * @return array
+     */
+    public function check()
+    {
+        return $this->get('check');
+    }
+
     public function toJson()
     {
         return json_encode($this->getArrayCopy());

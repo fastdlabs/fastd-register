@@ -10,6 +10,7 @@ namespace Controller;
 
 use FastD\Http\Response;
 use FastD\Http\ServerRequest;
+use Registry\Heartbeats\Heartbeats;
 use Registry\Node\ServiceNode;
 
 /**
@@ -28,6 +29,8 @@ class ServiceController
         $data = validator($request->getParsedBody());
 
         $node = registry()->store(ServiceNode::make($data));
+
+        (new Heartbeats())->start($node);
 
         return json($node->toArray(), Response::HTTP_CREATED);
     }
