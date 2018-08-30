@@ -8,7 +8,7 @@
  */
 
 return [
-    'host' => '112.124.34.87:9529',
+    'host' => '112.124.34.87:9985',
     'class' => \Server\RegistryServer::class,
     'options' => [
         'pid_file' => '/tmp/fastd/' . app()->getName() . '.pid',
@@ -22,7 +22,7 @@ return [
     'listeners' => [
         [
             'name' => 'producer',
-            'host' => '112.124.34.87:9530',
+            'host' => '112.124.34.87:9986',
             'class' => \Server\ProducerServer::class,
         ]
     ],
