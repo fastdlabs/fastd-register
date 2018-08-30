@@ -22,6 +22,7 @@ if (!function_exists('registry')) {
 if (!function_exists('validator')) {
     /**
      * @param $data
+     * @param null $rules
      * @return array
      * @throws Exception
      */

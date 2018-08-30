@@ -6,16 +6,26 @@
  * Time: 16:38
  */
 
-namespace Registry\Heartbeats;
+namespace Registry\Contracts;
 
-
-use Registry\Contracts\NodeAbstract;
-
+/**
+ * Interface HeartbeatsInterface
+ * @package Registry\Contracts
+ */
 interface HeartbeatsInterface
 {
+    /**
+     * @param NodeAbstract $node
+     */
     public function heartbeats(NodeAbstract $node);
 
+    /**
+     * @param NodeAbstract $node
+     */
     public function start(NodeAbstract $node);
 
+    /**
+     * @param NodeAbstract $node
+     */
     public function die(NodeAbstract $node);
 }

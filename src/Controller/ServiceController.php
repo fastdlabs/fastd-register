@@ -23,6 +23,7 @@ class ServiceController
      * @param ServerRequest $request
      * @return Response
      * @throws \Psr\Cache\InvalidArgumentException
+     * @throws \Exception
      */
     public function store(ServerRequest $request)
     {
@@ -39,6 +40,7 @@ class ServiceController
      * @param ServerRequest $request
      * @return Response
      * @throws \Psr\Cache\InvalidArgumentException
+     * @throws \Exception
      */
     public function update(ServerRequest $request)
     {

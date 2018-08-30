@@ -8,9 +8,15 @@
 
 namespace Registry\Heartbeats;
 
-
+use Registry\Contracts\HeartbeatsInterface;
 use Registry\Contracts\NodeAbstract;
 
+/**
+ * 心跳检测
+ *
+ * Class Heartbeats
+ * @package Registry\Heartbeats
+ */
 class Heartbeats implements HeartbeatsInterface
 {
     /**
@@ -44,6 +50,8 @@ class Heartbeats implements HeartbeatsInterface
 
     /**
      * @param NodeAbstract $node
+     * @return bool
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     protected function isAlive(NodeAbstract $node)
     {

@@ -12,9 +12,10 @@ return [
         'driver' => \Registry\Storage\RedisStorage::class, // redis
         'options' => [
             'connections' => [
-                'host' => '127.0.0.1',
+                'schema' => 'redis',
+                'host' => '10.160.55.191',
                 'port' => '6379',
-                'password' => null,
+                'password' => 'mmclick',
                 'database' => 15,
             ],
         ],

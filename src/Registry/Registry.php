@@ -57,7 +57,7 @@ class Registry implements StorageInterface
      */
     public function getItem($fd)
     {
-        return cache()->getItem('map.'.$fd);
+        return cache()->getItem('map.' . $fd);
     }
 
     /**

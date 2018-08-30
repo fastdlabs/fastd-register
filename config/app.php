@@ -18,6 +18,8 @@ return [
      */
     'timezone' => 'PRC',
 
+    'environment' => 'prod',
+
     /**
      * Bootstrap service.
      */
@@ -26,6 +28,7 @@ return [
         \FastD\ServiceProvider\LoggerServiceProvider::class,
         \FastD\ServiceProvider\DatabaseServiceProvider::class,
         \FastD\ServiceProvider\CacheServiceProvider::class,
+
         \Provider\RegisterProvider::class,
     ],
 
@@ -56,7 +59,7 @@ return [
                 'code' => $e->getCode(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => explode("\n", $e->getTraceAsString()),
+                //'trace' => explode("\n", $e->getTraceAsString()),
             ];
         },
         'log' => function (Exception $e) {
