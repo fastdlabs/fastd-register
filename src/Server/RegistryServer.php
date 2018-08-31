@@ -27,7 +27,6 @@ class RegistryServer extends HTTPServer
      */
     public function onManagerStart(swoole_server $server)
     {
-
         parent::onManagerStart($server);
     }
 

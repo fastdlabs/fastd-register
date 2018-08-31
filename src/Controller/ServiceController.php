@@ -31,7 +31,7 @@ class ServiceController
 
         $node = registry()->store(ServiceNode::make($data));
 
-        (new Heartbeats())->start($node);
+        // (new Heartbeats())->start($node);
 
         return json($node->toArray(), Response::HTTP_CREATED);
     }

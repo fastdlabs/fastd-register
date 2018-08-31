@@ -74,7 +74,7 @@ class Registry implements StorageInterface
             return ServiceNode::make([
                 'service_name' => $nodeInfo['service_name'],
                 'hash' => $nodeInfo['hash'],
-                'check' => $nodeInfo['check'],
+                //'check' => $nodeInfo['check'],
             ]);
         }
 
