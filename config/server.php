@@ -8,21 +8,22 @@
  */
 
 return [
-    'host' => '112.124.34.87:9985',
+    'host' =>  '127.0.0.1:9527',
     'class' => \Server\RegistryServer::class,
     'options' => [
         'pid_file' => '/tmp/fastd/' . app()->getName() . '.pid',
-        'worker_num' => 2,
+        'worker_num' => 1,
         'task_worker_num' => 5,
         'heartbeat_check_interval' => 5,
         'heartbeat_idle_time' => 15,
     ],
     'processes' => [
+
     ],
     'listeners' => [
         [
             'name' => 'producer',
-            'host' => '112.124.34.87:9986',
+            'host' => '127.0.0.1:9528',
             'class' => \Server\ProducerServer::class,
         ]
     ],

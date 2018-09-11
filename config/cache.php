@@ -9,9 +9,8 @@
 
 return [
     'default' => [
-        'adapter' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
+        'adapter' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
         'params' => [
-            'dsn' => 'redis://mmclick@10.160.55.191:6379/15'
         ],
     ]
 ];

@@ -13,9 +13,9 @@ return [
         'options' => [
             'connections' => [
                 'schema' => 'redis',
-                'host' => '10.160.55.191',
+                'host' => '127.0.0.1',
                 'port' => '6379',
-                'password' => 'mmclick',
+                'password' => null,
                 'database' => 15,
             ],
         ],
