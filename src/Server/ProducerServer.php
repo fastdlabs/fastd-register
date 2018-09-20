@@ -1,9 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: yong
- * Date: 2018/6/19
- * Time: 15:42
+ * @author    fastdlabs[yong]
+ * @copyright 2018
+ *
+ * @link      https://www.github.com/janhuang
+ * @link      http://www.fast-d.cn/
  */
 
 namespace Server;
@@ -34,13 +35,26 @@ class ProducerServer extends TCPServer
      */
     public function doWork(swoole_server $server, $fd, $data, $from_id)
     {
+        $nodeBefore = registry()->getItem($fd)->get();
+
         $response = parent::doWork($server, $fd, $data, $from_id);
 
         $node = registry()->getNode($fd);
 
-        if ($node instanceof NodeAbstract) {
-            $this->broadcast($server, $fd, $node);
+        echo '准备广播', PHP_EOL,$fd,PHP_EOL;
+        // 比对hash值 不同则需要广播至agent @todo parent::doWork心跳数据是否需要写入？
+        if (!isset($nodeBefore['hash']) || $nodeBefore['hash'] !== $node['hash']) {
+            echo '开始发送', PHP_EOL;
+            if ($node instanceof NodeAbstract) {
+                $this->broadcast($server, $fd, $node);
+            }
+            echo '广播完毕', PHP_EOL;
+
+            return $response;
         }
+        echo '节点hash相同,取消广播', PHP_EOL;
+
+        echo 'response';
 
         return $response;
     }
@@ -54,10 +68,13 @@ class ProducerServer extends TCPServer
      */
     public function doClose(swoole_server $server, $fd, $fromId)
     {
+        echo $fd,PHP_EOL;
         if (false !== ($node = registry()->getNode($fd))) {
             $item = registry()->getItem($fd);
+            echo $item->getKey(),PHP_EOL;
             registry()->remove($node);
             cache()->deleteItem($item->getKey());
+
             $this->broadcast($server, $fd, $node);
         }
     }

@@ -109,7 +109,7 @@ class RedisStorage implements StorageInterface
         $key = $this->getKey($key);
 
         if (!$this->getClient()->exists($key)) {
-            abort(404, 'http not found');
+            return [];
         }
 
         $nodes = [];

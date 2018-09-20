@@ -10,7 +10,6 @@ namespace Controller;
 
 use FastD\Http\Response;
 use FastD\Http\ServerRequest;
-use Registry\Heartbeats\Heartbeats;
 use Registry\Node\ServiceNode;
 
 /**
@@ -21,7 +20,7 @@ class ServiceController
 {
     /**
      * @param ServerRequest $request
-     * @return Response
+     * @return string
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Exception
      */
@@ -29,16 +28,16 @@ class ServiceController
     {
         $data = validator($request->getParsedBody());
 
-        $node = registry()->store(ServiceNode::make($data));
+        registry()->store(ServiceNode::make($data));
 
         // (new Heartbeats())->start($node);
 
-        return json($node->toArray(), Response::HTTP_CREATED);
+        return \response()->withContent('ok')->withStatus(Response::HTTP_CREATED);
     }
 
     /**
      * @param ServerRequest $request
-     * @return Response
+     * @return string
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Exception
      */
@@ -49,14 +48,14 @@ class ServiceController
         $node = ServiceNode::make($data);
         $node->set('hash', $request->getAttribute('service'));
 
-        $node = registry()->store($node);
+        registry()->store($node);
 
-        return json($node->toArray());
+        return \response()->withContent('ok');
     }
 
     /**
      * @param ServerRequest $request
-     * @return Response
+     * @return string
      * @throws \Psr\Cache\InvalidArgumentException
      */
     public function delete(ServerRequest $request)
@@ -68,14 +67,13 @@ class ServiceController
 
         registry()->remove($node);
 
-        return json([], Response::HTTP_NO_CONTENT);
+        return \response()->withContent('ok')->withStatus(Response::HTTP_NO_CONTENT);
     }
 
     /**
-     * @param ServerRequest $request
      * @return Response
      */
-    public function index(ServerRequest $request)
+    public function index()
     {
         return json(registry()->all());
     }

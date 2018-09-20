@@ -41,6 +41,8 @@ class RegistryServer extends HTTPServer
      */
     public function doTask(swoole_server $server, $data, $taskId, $workerId)
     {
+        print_r($data);
+        echo PHP_EOL;
         $this->broadcast($server, $data);
     }
 
@@ -54,6 +56,7 @@ class RegistryServer extends HTTPServer
         $data = Json::decode($data);
         if (isset($server->connections)) {
             foreach ($server->connections as $fd) {
+                echo 'fd: ' . $fd, PHP_EOL;
                 try {
                     $nodes = registry()->fetch($data['service']);
                     if ($data['fd'] != $fd) {
@@ -61,10 +64,15 @@ class RegistryServer extends HTTPServer
                             $data['service'] => $nodes,
                         ]));
                     }
-                }catch (\Exception $e) {
+                } catch (\Exception $e) {
+                    echo $e->getMessage(), PHP_EOL;
+                    echo $e->getCode(), PHP_EOL;
+                    echo($e->getTraceAsString()), PHP_EOL;
                     continue;
                 }
             }
         }
+
+        echo "当前服务器共有 " . count($server->connections) . " 个连接\n";
     }
 }
