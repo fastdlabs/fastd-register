@@ -8,7 +8,7 @@
  */
 
 return [
-    'host' =>  '127.0.0.1:9527',
+    'host' =>  'http://0.0.0.0:80',
     'class' => \Server\RegistryServer::class,
     'options' => [
         'pid_file' => '/tmp/fastd/' . app()->getName() . '.pid',
@@ -23,7 +23,7 @@ return [
     'listeners' => [
         [
             'name' => 'producer',
-            'host' => '127.0.0.1:9528',
+            'host' => '0.0.0.0:8800',
             'class' => \Server\ProducerServer::class,
         ]
     ],

@@ -1,0 +1,64 @@
+stages:
+  - build
+  - test
+  - docker_build
+  - docker_push
+  - docker_clean
+  - deploy_test
+cache:
+  key: ${CI_BUILD_REF_NAME}
+  paths:
+    - vendor
+    - bin
+build:
+  stage: build
+  only:
+    - master
+    - develop
+    - tags
+  script:
+    - composer install
+test:
+  stage: test
+  only:
+    - master
+    - develop
+    - tags
+  script:
+    - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./config
+    - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./src
+    - cp .env-example.yml .env.yml
+    - php bin/phpunit --coverage-text --colors=never
+docker_build:
+  stage: docker_build
+  only:
+    - master
+    - develop
+  script:
+    - cp .env-example.yml .env.yml
+    - sudo docker build -t service/service_register .
+docker_push:
+  stage: docker_push
+  only:
+    - tags
+  script:
+    - composer install --no-dev --optimize-autoloader
+    - sudo docker login docker.registry.com:5000 -u docker -p Linghit@mmc123456
+    - sudo docker tag service/register:latest docker.registry.com:5000/service/register:${CI_BUILD_TAG}
+    - sudo docker push docker.registry.com:5000/service/register:${CI_BUILD_TAG}
+    - sudo docker logout docker.registry.com:5000
+docker_clean:
+  stage: docker_clean
+  only:
+    - master
+    - develop
+  script:
+    - sudo docker rm -f service_register
+  allow_failure: true
+deploy_test:
+  stage: deploy_test
+  only:
+    - master
+    - develop
+  script:
+    - sudo docker run --name service_register -d -p 112.124.34.87:9985:80 -p 112.124.34.87:9986:8800 -v /media/raid10/htdocs/services/register/runtime/logs:/app/runtime/logs:rw service/register
