@@ -28,7 +28,7 @@ test:
     - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./config
  #   - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./src
     - cp .env.yml.example .env.yml
-    - php bin/phpunit --coverage-text --colors=never
+ #   - php bin/phpunit --coverage-text --colors=never
 docker_build:
   stage: docker_build
   only:

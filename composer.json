@@ -20,7 +20,7 @@
         "runner/validator": "^0.2.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0",
+        "phpunit/dbunit": "^2.0",
         "liron-li/php-zookeeper-ide-helper": "^0.1.0"
     },
     "config": {
