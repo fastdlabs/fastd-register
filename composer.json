@@ -16,6 +16,7 @@
         "php": ">=7.0",
         "fastd/fastd": "^3.2",
         "predis/predis": "^1.1",
+        "fastd/qconf-service-provider": "^0.2",
         "runner/validator": "^0.2.8"
     },
     "require-dev": {

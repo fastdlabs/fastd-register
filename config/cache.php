@@ -11,7 +11,12 @@ return [
     'default' => [
         'adapter' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
         'params' => [
-            'dsn' => 'redis://172.17.0.3:6397/15'
+            'dsn' => qconf_get_value(
+                '/conf/services/register/redis/cache/dsn',
+                '',
+                '',
+                'redis://172.17.0.3:6397/15'
+            )
         ],
     ]
 ];

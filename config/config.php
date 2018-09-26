@@ -11,13 +11,19 @@ return [
     'registry' => [
         'driver' => \Registry\Storage\RedisStorage::class, // redis
         'options' => [
-            'connections' => [
-                'schema' => 'redis',
-                'host' => '172.17.0.3',
-                'port' => '6379',
-                'password' => null,
-                'database' => 15,
-            ],
+            'connections' =>
+                qconf_get_values(
+                    '/conf/services/register/redis/connections',
+                    '',
+                    '',
+                    [
+                        'schema' => 'redis',
+                        'host' => '172.17.0.3',
+                        'port' => '6379',
+                        'password' => null,
+                        'database' => 15,
+                    ]
+                ),
         ],
         //zookeeper
         /*'driver' => 'zookeeper',

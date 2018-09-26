@@ -27,7 +27,7 @@ test:
   script:
     - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./config
  #   - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./src
-    - cp .env-example.yml .env.yml
+    - cp .env.yml.example .env.yml
     - php bin/phpunit --coverage-text --colors=never
 docker_build:
   stage: docker_build
@@ -35,7 +35,7 @@ docker_build:
     - master
     - develop
   script:
-    - cp .env-example.yml .env.yml
+    - cp .env.yml.example .env.yml
     - sudo docker build -t service/register .
 docker_push:
   stage: docker_push
@@ -61,4 +61,4 @@ deploy_test:
     - master
     - develop
   script:
-    - sudo docker run --name service/register -d -p 112.124.34.87:9985:80 -p 112.124.34.87:9986:8800 -v /media/raid10/htdocs/services/register/.env.yml:/media/raid10/htdocs/services/register/.env.yml:rw -v /media/raid10/htdocs/services/register/runtime/logs:/media/raid10/htdocs/services/register/runtime/logs:rw service/register
+    - sudo docker run --name service/register -d -p 9985:80 -p 9986:8800 -v /media/raid10/htdocs/services/register/.env.yml:/media/raid10/htdocs/services/register/.env.yml:rw -v /media/raid10/htdocs/services/register/runtime/logs:/media/raid10/htdocs/services/register/runtime/logs:rw service/register
