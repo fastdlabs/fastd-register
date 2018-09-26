@@ -26,7 +26,7 @@ test:
     - tags
   script:
     - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./config
-    - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./src
+ #   - phpcs --colors --standard=PSR1,PSR2 --encoding=utf-8 --tab-width=4 ./src
     - cp .env-example.yml .env.yml
     - php bin/phpunit --coverage-text --colors=never
 docker_build:
