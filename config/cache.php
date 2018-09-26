@@ -11,7 +11,7 @@ return [
     'default' => [
         'adapter' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
         'params' => [
-            'dsn' => 'redis://127.0.0.1:6397/15'
+            'dsn' => 'redis://172.17.0.3:6397/15'
         ],
     ]
 ];

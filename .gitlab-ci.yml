@@ -36,7 +36,7 @@ docker_build:
     - develop
   script:
     - cp .env-example.yml .env.yml
-    - sudo docker build -t service/service_register .
+    - sudo docker build -t service/register .
 docker_push:
   stage: docker_push
   only:
@@ -53,7 +53,7 @@ docker_clean:
     - master
     - develop
   script:
-    - sudo docker rm -f service_register
+    - sudo docker rm -f service/register
   allow_failure: true
 deploy_test:
   stage: deploy_test
@@ -61,4 +61,4 @@ deploy_test:
     - master
     - develop
   script:
-    - sudo docker run --name service_register -d -p 112.124.34.87:9985:80 -p 112.124.34.87:9986:8800 -v /media/raid10/htdocs/services/register/runtime/logs:/app/runtime/logs:rw service/register
+    - sudo docker run --name service/register -d -p 112.124.34.87:9985:80 -p 112.124.34.87:9986:8800 -v /media/raid10/htdocs/services/register/.env.yml:/media/raid10/htdocs/services/register/.env.yml:rw -v /media/raid10/htdocs/services/register/runtime/logs:/media/raid10/htdocs/services/register/runtime/logs:rw service/register

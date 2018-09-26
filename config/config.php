@@ -13,7 +13,7 @@ return [
         'options' => [
             'connections' => [
                 'schema' => 'redis',
-                'host' => '127.0.0.1',
+                'host' => '172.17.0.3',
                 'port' => '6379',
                 'password' => null,
                 'database' => 15,
@@ -25,8 +25,5 @@ return [
         'port' => 2181,
         //集群模式
         //'url' => '127.0.0.1:2181,127.0.0.1:2182'*/
-    ],
-    'producer_server' => [
-        'host' => 'tcp://0.0.0.0:9996'
     ]
 ];
