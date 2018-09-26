@@ -61,4 +61,4 @@ deploy_test:
     - master
     - develop
   script:
-    - sudo docker run --name service_register -d -p 9985:80 -p 9986:8800 -v /media/raid10/htdocs/services/register/.env.yml:/media/raid10/htdocs/services/register/.env.yml:rw -v /media/raid10/htdocs/services/register/runtime/logs:/media/raid10/htdocs/services/register/runtime/logs:rw service/register
+    - sudo docker run --name service_register -d -p 9985:80 -p 9986:8800 --link redis -v /media/raid10/htdocs/services/register/.env.yml:/media/raid10/htdocs/services/register/.env.yml:rw -v /media/raid10/htdocs/services/register/runtime/logs:/media/raid10/htdocs/services/register/runtime/logs:rw service/register
