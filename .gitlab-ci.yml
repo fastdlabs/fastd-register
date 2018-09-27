@@ -35,7 +35,8 @@ docker_build:
     - master
     - develop
   script:
-    #- cp .env.yml.example .env.yml
+    - cp .env.yml.example .env.yml
+    - ls
     - sudo docker build -t service/register .
 docker_push:
   stage: docker_push
