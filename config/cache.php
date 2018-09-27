@@ -13,9 +13,9 @@ return [
         'params' => [
             'dsn' => qconf_get_value(
                 '/conf/services/register/redis/cache/dsn',
-                '',
-                '',
-                'redis://172.17.0.3:6397/15'
+                null,
+                null,
+                'redis://127.0.0.1:6397/15'
             )
         ],
     ]

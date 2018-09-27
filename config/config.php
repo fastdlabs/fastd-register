@@ -14,11 +14,11 @@ return [
             'connections' =>
                 qconf_get_values(
                     '/conf/services/register/redis/connections',
-                    '',
-                    '',
+                    null,
+                    null,
                     [
                         'schema' => 'redis',
-                        'host' => '172.17.0.3',
+                        'host' => '127.0.0.1',
                         'port' => '6379',
                         'password' => null,
                         'database' => 15,
