@@ -25,4 +25,3 @@ if [ "$env_option" == "prod" ]; then
 fi
 
 php bin/server start
-dioc
