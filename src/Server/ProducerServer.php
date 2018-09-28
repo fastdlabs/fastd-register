@@ -41,18 +41,18 @@ class ProducerServer extends TCPServer
 
         $node = registry()->getNode($fd);
 
-        echo '准备广播 >> ',$fd;
+        echo '准备广播 >> ', $fd;
         // 比对hash值 不同则需要广播至agent @todo parent::doWork心跳数据是否需要写入？
         if (!isset($nodeBefore['hash']) || $nodeBefore['hash'] !== $node['hash']) {
             echo ' >>开始发送>> ';
             if ($node instanceof NodeAbstract) {
                 $this->broadcast($server, $fd, $node);
             }
-            echo ' >>广播完毕>> ';
+            echo ' >>广播完毕>> ', PHP_EOL;
 
             return $response;
         }
-        echo ' >>节点hash相同,取消广播>>', PHP_EOL;
+        echo ' >> 节点hash相同,取消广播 >> ', PHP_EOL;
 
         return $response;
     }
