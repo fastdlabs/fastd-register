@@ -73,6 +73,7 @@ class RegistryServer extends HTTPServer
             }
         }
 
+
         echo "当前服务器共有 " . count($server->connections ?? 0) . " 个连接\n";
     }
 }
