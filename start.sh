@@ -24,4 +24,4 @@ if [ "$env_option" == "prod" ]; then
   fi
 fi
 
-php bin/server start > dev/null 2>&1
+php bin/server start
