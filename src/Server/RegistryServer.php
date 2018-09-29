@@ -53,8 +53,12 @@ class RegistryServer extends HTTPServer
      */
     public function broadcast(swoole_server $server, $data)
     {
+        echo 'task1 >> ',$data, PHP_EOL;
         $data = Json::decode($data);
+
         if (isset($server->connections)) {
+            echo 'task2 >> ';
+
             foreach ($server->connections as $fd) {
                 echo 'fd: ' . $fd, PHP_EOL;
                 try {
@@ -73,7 +77,6 @@ class RegistryServer extends HTTPServer
             }
         }
 
-
-        echo "当前服务器共有 " . count($server->connections ?? 0) . " 个连接\n";
+        echo "当前服务器共有 " . count($server->connections ?? []) . " 个连接\n";
     }
 }

@@ -43,8 +43,8 @@ class ProducerServer extends TCPServer
 
         echo '准备广播 >> ', $fd;
         // 比对hash值 不同则需要广播至agent @todo parent::doWork心跳数据是否需要写入？
-        if (!isset($nodeBefore['hash']) || $nodeBefore['hash'] !== $node['hash']) {
-            echo ' >>开始发送>> ',$nodeBefore['hash'];
+        if ($node && (!isset($nodeBefore['hash']) || $nodeBefore['hash'] !== $node['hash'])) {
+            echo ' >>开始发送>> ', $nodeBefore['hash'], '>>', $node['hash'];
             if ($node instanceof NodeAbstract) {
                 $this->broadcast($server, $fd, $node);
             }

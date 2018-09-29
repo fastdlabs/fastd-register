@@ -6,7 +6,8 @@ WORKDIR /tmp
 RUN apt-get update \
     && apt-get install -y procps \
     && apt-get install -y cmake  \
-    && apt-get install -y iputils-ping
+    && apt-get install -y iputils-ping \
+    && apt-get install -y libpcre3 libpcre3-dev
 
 # 安装swoole扩展
 RUN cd /usr/local/src \
