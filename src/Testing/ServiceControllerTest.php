@@ -46,13 +46,18 @@ class ServiceControllerTest extends TestCase
         $data = $data2 = $this->request_data;
         $data2['service_host'] = 'ws://127.0.0.1';
 
-        $request = $this->request('POST', '/v1/services');
+        $request = $this->request('POST', '/services');
         $response = $this->handleRequest($request, $data);
+        echo  11;exit();
+
+
         $this->equalsStatus($response, Response::HTTP_CREATED);
+        echo  11;
+
         $response = $this->handleRequest($request, $data2);
         $this->equalsStatus($response, Response::HTTP_CREATED);
 
-        $request = $this->request('GET', '/v1/services');
+        $request = $this->request('GET', '/services');
         $response = $this->handleRequest($request);
         $this->equalsJsonResponseHasKey($response, 'phpunit');
         $this->equalsResponseCount($response, 1);
@@ -61,7 +66,7 @@ class ServiceControllerTest extends TestCase
     public function testUpdate()
     {
         // 9fcaafe4a5953dfe59b0eb474de29709 为测试案例的请求代码hash
-        $request = $this->request('PUT', '/v1/services/04d6f7046e0834d0ac73379ab83bda16');
+        $request = $this->request('PUT', '/services/04d6f7046e0834d0ac73379ab83bda16');
         $response = $this->handleRequest($request, $this->request_update_data);
 
         $this->equalsStatus($response, Response::HTTP_OK);
@@ -70,15 +75,15 @@ class ServiceControllerTest extends TestCase
 
     public function testDelete()
     {
-        $request = $this->request('DELETE', '/v1/services/phpunit/04d6f7046e0834d0ac73379ab83bda16');
+        $request = $this->request('DELETE', '/services/phpunit/04d6f7046e0834d0ac73379ab83bda16');
         $response = $this->handleRequest($request);
         $this->equalsStatus($response, Response::HTTP_NO_CONTENT);
 
-        $request = $this->request('DELETE', '/v1/services/phpunit');
+        $request = $this->request('DELETE', '/services/phpunit');
         $response = $this->handleRequest($request);
         $this->equalsStatus($response, Response::HTTP_NO_CONTENT);
 
-        $request = $this->request('GET', '/v1/services');
+        $request = $this->request('GET', '/services');
         $response = $this->handleRequest($request);
         $this->equalsJson($response, []);
     }
